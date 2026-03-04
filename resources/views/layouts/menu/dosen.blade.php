@@ -1,0 +1,54 @@
+<li class="nav-item">
+    <a href="{{ route('dosen.dashboard') }}" class="nav-link {{ request()->routeIs('dosen.dashboard') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>Dashboard</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('dosen.bimbingan.index') }}" class="nav-link {{ request()->routeIs('dosen.bimbingan*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-users"></i>
+        <p>Kelompok Bimbingan</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('dosen.logbook.pending') }}" class="nav-link {{ request()->routeIs('dosen.logbook*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-book"></i>
+        <p>
+            Logbook Perlu Review
+            @php
+                $pendingCount = App\Models\Logbook::whereHas('kelompokSiswa.kelompok', function($q) {
+                    $q->where('dosen_id', Auth::user()->dosen->id ?? 0);
+                })->where('status', 'pending')->count();
+            @endphp
+            @if($pendingCount > 0)
+                <span class="badge badge-warning right">{{ $pendingCount }}</span>
+            @endif
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('dosen.laporan.index') }}" class="nav-link {{ request()->routeIs('dosen.laporan*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-file-alt"></i>
+        <p>
+            Review Laporan
+            @php
+                $laporanCount = App\Models\Laporan::whereHas('kelompokSiswa.kelompok', function($q) {
+                    $q->where('dosen_id', Auth::user()->dosen->id ?? 0);
+                })->whereIn('status', ['diajukan', 'direvisi'])->count();
+            @endphp
+            @if($laporanCount > 0)
+                <span class="badge badge-warning right">{{ $laporanCount }}</span>
+            @endif
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('dosen.penilaian.index') }}" class="nav-link {{ request()->routeIs('dosen.penilaian*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-star"></i>
+        <p>Penilaian</p>
+    </a>
+</li>
