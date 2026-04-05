@@ -78,6 +78,29 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Di dalam form, tambahkan setelah field phone -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="jurusan">Jurusan <span class="text-danger">*</span></label>
+            <input type="text" class="form-control @error('jurusan') is-invalid @enderror" 
+                   id="jurusan" name="jurusan" value="{{ old('jurusan') }}" required>
+            @error('jurusan')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="fakultas">Fakultas <span class="text-danger">*</span></label>
+            <input type="text" class="form-control @error('fakultas') is-invalid @enderror" 
+                   id="fakultas" name="fakultas" value="{{ old('fakultas') }}" required>
+            @error('fakultas')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+</div>
                     
                     <div class="row">
                         <div class="col-md-6">

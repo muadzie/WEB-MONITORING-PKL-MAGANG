@@ -33,6 +33,20 @@
 </li>
 
 <li class="nav-item">
+    <a href="{{ route('siswa.absensi.index') }}" class="nav-link {{ request()->routeIs('siswa.absensi*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-fingerprint"></i>
+        <p>Absensi PKL</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('siswa.ijin-sakit.index') }}" class="nav-link {{ request()->routeIs('siswa.ijin-sakit*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-file-medical"></i>
+        <p>Izin / Sakit</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('siswa.laporan.index') }}" class="nav-link {{ request()->routeIs('siswa.laporan*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-file-alt"></i>
         <p>Upload Laporan</p>

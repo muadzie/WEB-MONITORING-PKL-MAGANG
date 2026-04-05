@@ -52,50 +52,48 @@ class BimbinganController extends Controller
     /**
      * Display a listing of bimbingan.
      */
-    public function dashboard()
-    {
-        $this->initDosen();
-        
-        // Pastikan $this->dosen tidak null
-        if (!$this->dosen) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Data dosen tidak ditemukan');
-        }
-        
-        $dosenId = $this->dosen->id;
-        
-        $totalKelompok = KelompokPkl::where('dosen_id', $dosenId)->count();
-        $kelompokAktif = KelompokPkl::where('dosen_id', $dosenId)
-                          ->where('status', 'aktif')->count();
-        
-        $logbookPending = Logbook::whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
-                                $q->where('dosen_id', $dosenId);
-                            })->where('status', 'pending')->count();
-        
-        $laporanPending = Laporan::whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
-                                $q->where('dosen_id', $dosenId);
-                            })->whereIn('status', ['diajukan', 'direvisi'])->count();
-        
-        $kelompokTerbaru = KelompokPkl::with(['perusahaan', 'anggota'])
-                            ->where('dosen_id', $dosenId)
-                            ->orderBy('created_at', 'desc')
-                            ->limit(5)
-                            ->get();
-        
-        $logbookTerbaru = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
-                            ->whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
-                                $q->where('dosen_id', $dosenId);
-                            })
-                            ->orderBy('created_at', 'desc')
-                            ->limit(10)
-                            ->get();
-        
-        return view('dosen.dashboard', compact(
-            'totalKelompok', 'kelompokAktif', 'logbookPending', 'laporanPending',
-            'kelompokTerbaru', 'logbookTerbaru'
-        ));
-    }
+   public function dashboard()
+{
+    $this->initDosen();
     
+    $dosenId = $this->dosen->id;
+    
+    $totalKelompok = KelompokPkl::where('dosen_id', $dosenId)->count();
+    $kelompokAktif = KelompokPkl::where('dosen_id', $dosenId)
+                      ->where('status', 'aktif')->count();
+    
+    $logbookPending = Logbook::whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
+                            $q->where('dosen_id', $dosenId);
+                        })->where('status', 'pending')->count();
+    
+    $laporanPending = Laporan::whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
+                            $q->where('dosen_id', $dosenId);
+                        })->whereIn('status', ['diajukan', 'direvisi'])->count();
+    
+    // Tambahkan data untuk tabel terbaru
+    $kelompokTerbaru = KelompokPkl::with(['perusahaan', 'anggota'])
+                        ->where('dosen_id', $dosenId)
+                        ->orderBy('created_at', 'desc')
+                        ->limit(5)
+                        ->get();
+    
+    $logbookTerbaru = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
+                        ->whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
+                            $q->where('dosen_id', $dosenId);
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->limit(10)
+                        ->get();
+    
+    return view('dosen.dashboard', compact(
+        'totalKelompok', 
+        'kelompokAktif', 
+        'logbookPending', 
+        'laporanPending',
+        'kelompokTerbaru',  // Tambahkan ini
+        'logbookTerbaru'    // Tambahkan ini
+    ));
+}
     
     /**
      * Display list of bimbingan.

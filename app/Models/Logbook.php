@@ -15,8 +15,14 @@ class Logbook extends Model
         'kelompok_siswa_id', 'tanggal', 'kegiatan', 'deskripsi',
         'jam_mulai', 'jam_selesai', 'dokumentasi', 'status',
         'catatan_dosen', 'catatan_pt', 'approved_by_dosen',
-        'approved_by_pt', 'approved_at_dosen', 'approved_at_pt'
+        'approved_by_pt', 'approved_at_dosen', 'approved_at_pt', 'status_hari',
+    'ijin_sakit_id',
     ];
+
+    public function ijinSakit()
+{
+    return $this->belongsTo(IjinSakit::class);
+}
 
     protected $casts = [
         'tanggal' => 'date',
@@ -25,6 +31,21 @@ class Logbook extends Model
         'approved_at_dosen' => 'datetime',
         'approved_at_pt' => 'datetime',
     ];
+
+    // Tambahkan method untuk cek apakah bisa mengisi logbook
+public static function canCreateLogbook($siswaId)
+{
+    $today = Carbon::today();
+    
+    $ijinSakit = IjinSakit::where('siswa_id', $siswaId)
+                ->where('status', 'disetujui')
+                ->whereDate('tanggal_mulai', '<=', $today)
+                ->whereDate('tanggal_selesai', '>=', $today)
+                ->exists();
+    
+    return !$ijinSakit;
+}
+
 
     public function kelompokSiswa()
     {

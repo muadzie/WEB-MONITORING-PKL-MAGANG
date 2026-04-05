@@ -48,14 +48,17 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
-            'nomor_induk' => 'required|string|unique:users',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'role' => 'required|in:admin,dosen,pt,siswa',
-            'foto' => 'nullable|image|max:2048',
+              'name' => 'required|string|max:255',
+    'email' => 'required|email|unique:users',
+    'password' => 'required|min:8|confirmed',
+    'nomor_induk' => 'required|string|unique:users',
+    'phone' => 'nullable|string|max:20',
+    'address' => 'nullable|string',
+    'role' => 'required|in:admin,dosen,pt,siswa',
+    'foto' => 'nullable|image|max:2048',
+    // Tambahkan ini untuk dosen
+    'jurusan' => 'required_if:role,dosen|string|nullable',
+    'fakultas' => 'required_if:role,dosen|string|nullable',
         ]);
         
         $data = [
@@ -79,12 +82,14 @@ class UserController extends Controller
         // Buat entri di tabel spesifik sesuai role
         if ($request->role === 'dosen') {
             Dosen::create([
-                'user_id' => $user->id,
-                'nidn' => $request->nomor_induk,
-                'nama_dosen' => $request->name,
-                'email' => $request->email,
-                'telepon' => $request->phone,
-                'is_active' => true,
+                  'user_id' => $user->id,
+        'nidn' => $request->nomor_induk,
+        'nama_dosen' => $request->name,
+        'jurusan' => $request->jurusan ?? 'Teknik Informatika', // Tambahkan ini
+        'fakultas' => $request->fakultas ?? 'Ilmu Komputer',   // Tambahkan ini
+        'email' => $request->email,
+        'telepon' => $request->phone,
+        'is_active' => true,
             ]);
         } elseif ($request->role === 'pt') {
             Perusahaan::create([

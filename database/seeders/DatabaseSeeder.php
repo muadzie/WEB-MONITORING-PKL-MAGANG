@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             DosenSeeder::class,
             PerusahaanSeeder::class,
             KelompokSeeder::class,
-            LogbookSeeder::class, // Tambahkan jika perlu
+          //  LogbookSeeder::class, // Tambahkan jika perlu
             LaporanSeeder::class,  // Tambahkan jika perlu
               PenilaianSeeder::class,
                NotifikasiSeeder::class,

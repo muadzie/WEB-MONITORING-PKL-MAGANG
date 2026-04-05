@@ -51,21 +51,28 @@ class LogbookController extends Controller
         return view('siswa.logbook.index', compact('logbooks', 'kelompokSiswa'));
     }
 
+        
     /**
      * Show the form for creating a new logbook.
      */
-    public function create()
-    {
-        $kelompokSiswa = Auth::user()->kelompokSiswa()->first();
-        
-        if (!$kelompokSiswa) {
-            return redirect()->route('siswa.dashboard')
-                ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
-        }
-        
-        return view('siswa.logbook.create', compact('kelompokSiswa'));
+  // Di method create dan store
+public function create()
+{
+    $kelompokSiswa = Auth::user()->kelompokSiswa()->first();
+    
+    if (!$kelompokSiswa) {
+        return redirect()->route('siswa.dashboard')
+            ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
     }
-
+    
+    // Cek apakah hari ini sedang izin/sakit
+    if (!Logbook::canCreateLogbook(Auth::id())) {
+        return redirect()->route('siswa.logbook.index')
+            ->with('error', 'Anda sedang dalam masa izin/sakit, tidak dapat mengisi logbook.');
+    }
+    
+    return view('siswa.logbook.create', compact('kelompokSiswa'));
+}
     /**
      * Store a newly created logbook in storage.
      */
