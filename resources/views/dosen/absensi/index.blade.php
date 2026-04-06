@@ -1,15 +1,108 @@
 @extends('layouts.app')
 
 @section('title', 'Absensi Siswa')
-@section('page-title', 'Absensi Siswa')
+@section('page-title', 'Absensi Siswa Bimbingan')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Absensi Siswa Bimbingan</h3>
+        <h3 class="card-title">Absensi Siswa</h3>
     </div>
     <div class="card-body">
-        <div class="alert alert-success">Halaman absensi siswa - Sedang dalam pengembangan</div>
+        <form method="GET" action="{{ route('dosen.absensi.siswa') }}" class="form-inline mb-3">
+            <div class="form-group mr-2">
+                <label class="mr-2">Pilih Kelompok:</label>
+                <select name="kelompok_id" class="form-control" required>
+                    <option value="">-- Pilih Kelompok --</option>
+                    @foreach($kelompoks as $kelompok)
+                        <option value="{{ $kelompok->id }}" {{ request('kelompok_id') == $kelompok->id ? 'selected' : '' }}>
+                            {{ $kelompok->nama_kelompok }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tampilkan</button>
+        </form>
+
+        @if($selectedKelompok)
+            <h4>Kelompok: {{ $selectedKelompok->nama_kelompok }}</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NIM</th>
+                            <th>Nama Siswa</th>
+                            <th>Status Absen Hari Ini</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($siswas as $index => $siswa)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $siswa->nomor_induk }}</td>
+                            <td>{{ $siswa->name }}</td>
+                            <td>
+                                @if($siswa->absensi_hari_ini)
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check-circle"></i> Sudah Absen
+                                    </span>
+                                @else
+                                    <span class="badge badge-danger">
+                                        <i class="fas fa-clock"></i> Belum Absen
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                @if(!$siswa->absensi_hari_ini)
+                                    <button class="btn btn-success btn-sm btn-absen" 
+                                            data-id="{{ $siswa->id }}" 
+                                            data-name="{{ $siswa->name }}">
+                                        <i class="fas fa-fingerprint"></i> Absenkan
+                                    </button>
+                                @else
+                                    <span class="text-muted">Sudah diabsen</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('.btn-absen').click(function() {
+        let id = $(this).data('id');
+        let name = $(this).data('name');
+        
+        if (confirm('Absenkan ' + name + ' sebagai hadir?')) {
+            $.ajax({
+                url: '{{ url("dosen/absensi/absen-siswa") }}/' + id,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.error);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Terjadi kesalahan: ' + xhr.responseJSON?.error || 'Unknown error');
+                }
+            });
+        }
+    });
+});
+</script>
+@endpush

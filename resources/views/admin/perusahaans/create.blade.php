@@ -35,7 +35,54 @@
                             </div>
                         </div>
                     </div>
-                    
+
+                    <!-- ========== BAGIAN ALAMAT DENGAN PETA ========== -->
+                    <div class="card card-primary mt-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Lokasi Perusahaan (Pilih di Peta)</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Input Alamat -->
+                            <div class="form-group">
+                                <label for="alamat">Alamat Lengkap <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control @error('alamat') is-invalid @enderror" 
+                                           id="alamat" name="alamat" value="{{ old('alamat') }}" 
+                                           placeholder="Contoh: Jl. Sudirman No. 123, Jakarta" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-info" id="search-address-btn" type="button">
+                                            <i class="fas fa-search"></i> Cari Alamat
+                                        </button>
+                                    </div>
+                                </div>
+                                @error('alamat')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                                <small class="text-muted">Ketik alamat, lalu klik "Cari Alamat" untuk mencari lokasi.</small>
+                            </div>
+
+                            <!-- Hidden fields untuk koordinat -->
+                            <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', '-6.200000') }}">
+                            <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', '106.816666') }}">
+
+                            <!-- Peta -->
+                            <div class="form-group">
+                                <label>Pilih Lokasi di Peta</label>
+                                <div id="map" style="height: 400px; width: 100%; border-radius: 10px; z-index: 1;"></div>
+                                <small class="text-muted mt-2 d-block">
+                                    * Geser marker untuk menentukan titik lokasi yang lebih presisi. 
+                                    Klik pada peta untuk memindahkan marker.
+                                </small>
+                            </div>
+
+                            <!-- Informasi Koordinat -->
+                            <div class="alert alert-info mt-2" id="coord-info">
+                                <i class="fas fa-map-marker-alt"></i> 
+                                Koordinat: <span id="coord-display">Belum dipilih (default: Jakarta)</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -58,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -81,20 +128,20 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="alamat">Alamat <span class="text-danger">*</span></label>
                                 <textarea class="form-control @error('alamat') is-invalid @enderror" 
-                                          id="alamat" name="alamat" rows="3" required>{{ old('alamat') }}</textarea>
+                                          id="alamat_text" name="alamat" rows="3" required>{{ old('alamat') }}</textarea>
                                 @error('alamat')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
@@ -121,7 +168,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="create_user" name="create_user" value="1" {{ old('create_user') ? 'checked' : '' }}>
@@ -130,7 +177,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div id="userAccountFields" style="display: {{ old('create_user') ? 'block' : 'none' }};">
                         <div class="row">
                             <div class="col-md-6">
@@ -152,7 +199,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Simpan
@@ -167,27 +214,144 @@
 </div>
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    #map { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
+</style>
+@endpush
+
 @push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    $(function() {
-        // Toggle user account fields
-        $('#create_user').change(function() {
-            if ($(this).is(':checked')) {
-                $('#userAccountFields').slideDown();
-                $('#password').prop('required', true);
-                $('#password_confirmation').prop('required', true);
-            } else {
-                $('#userAccountFields').slideUp();
-                $('#password').prop('required', false);
-                $('#password_confirmation').prop('required', false);
-            }
-        });
-        
-        // File input preview
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
+let map, marker;
+let currentLat = -6.200000;
+let currentLng = 106.816666;
+
+// Inisialisasi peta
+function initMap() {
+    // Cek apakah ada koordinat dari old input
+    const oldLat = document.getElementById('latitude').value;
+    const oldLng = document.getElementById('longitude').value;
+    
+    if (oldLat && oldLng && oldLat != '-6.200000') {
+        currentLat = parseFloat(oldLat);
+        currentLng = parseFloat(oldLng);
+    }
+    
+    map = L.map('map').setView([currentLat, currentLng], 15);
+    
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    // Marker yang bisa dipindahkan
+    marker = L.marker([currentLat, currentLng], { draggable: true }).addTo(map);
+    
+    // Event ketika marker dipindah
+    marker.on('dragend', function(e) {
+        const position = marker.getLatLng();
+        updateCoordinates(position.lat, position.lng);
+        reverseGeocode(position.lat, position.lng);
     });
+    
+    // Klik pada peta untuk memindahkan marker
+    map.on('click', function(e) {
+        marker.setLatLng(e.latlng);
+        updateCoordinates(e.latlng.lat, e.latlng.lng);
+        reverseGeocode(e.latlng.lat, e.latlng.lng);
+    });
+    
+    // Tampilkan informasi koordinat awal
+    updateCoordinatesDisplay(currentLat, currentLng);
+}
+
+// Update koordinat di hidden fields
+function updateCoordinates(lat, lng) {
+    currentLat = lat;
+    currentLng = lng;
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+    updateCoordinatesDisplay(lat, lng);
+}
+
+function updateCoordinatesDisplay(lat, lng) {
+    document.getElementById('coord-display').innerHTML = lat.toFixed(6) + ', ' + lng.toFixed(6);
+}
+
+// Reverse geocoding (cari alamat dari koordinat)
+function reverseGeocode(lat, lng) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.display_name) {
+                document.getElementById('alamat').value = data.display_name;
+                document.getElementById('alamat_text').value = data.display_name;
+            }
+        })
+        .catch(error => console.log('Geocoding error:', error));
+}
+
+// Cari alamat dari teks
+function searchAddress() {
+    const address = document.getElementById('alamat').value;
+    if (!address) {
+        alert('Silakan isi alamat terlebih dahulu.');
+        return;
+    }
+    
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lng = parseFloat(data[0].lon);
+                
+                // Pindahkan peta dan marker
+                map.setView([lat, lng], 16);
+                marker.setLatLng([lat, lng]);
+                
+                // Update koordinat
+                updateCoordinates(lat, lng);
+            } else {
+                alert('Alamat tidak ditemukan. Silakan coba alamat yang lebih spesifik.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat mencari lokasi.');
+        });
+}
+
+// Event listeners
+document.getElementById('search-address-btn').addEventListener('click', searchAddress);
+document.getElementById('alamat').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        searchAddress();
+    }
+});
+
+// Toggle user account fields
+$('#create_user').change(function() {
+    if ($(this).is(':checked')) {
+        $('#userAccountFields').slideDown();
+        $('#password').prop('required', true);
+        $('#password_confirmation').prop('required', true);
+    } else {
+        $('#userAccountFields').slideUp();
+        $('#password').prop('required', false);
+        $('#password_confirmation').prop('required', false);
+    }
+});
+
+// File input preview
+$('.custom-file-input').on('change', function() {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+});
+
+// Jalankan inisialisasi peta setelah halaman siap
+document.addEventListener('DOMContentLoaded', initMap);
 </script>
 @endpush

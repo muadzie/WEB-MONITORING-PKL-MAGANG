@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
 use App\Models\KelompokPkl;
-use App\Models\User;
 use App\Models\KelompokSiswa;
 use App\Models\Notifikasi;
+use App\Models\User;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\AbsensiExport;
 
 class AbsensiDosenController extends Controller
 {
@@ -38,26 +36,21 @@ class AbsensiDosenController extends Controller
         
         $dosenId = $this->dosen->id;
         
-        $query = KelompokPkl::with(['anggota.siswa'])
-                 ->where('dosen_id', $dosenId);
-        
-        if ($request->filled('kelompok_id')) {
-            $query->where('id', $request->kelompok_id);
-        }
-        
-        $kelompoks = $query->get();
+        $kelompoks = KelompokPkl::where('dosen_id', $dosenId)->get();
         
         $selectedKelompok = null;
         $siswas = collect();
         
         if ($request->filled('kelompok_id')) {
-            $selectedKelompok = KelompokPkl::with(['anggota.siswa'])->find($request->kelompok_id);
-            $siswas = $selectedKelompok->anggota->map(function($item) {
-                $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
-                                                    ->whereDate('tanggal', Carbon::today())
-                                                    ->first();
-                return $item->siswa;
-            });
+            $selectedKelompok = KelompokPkl::with('anggota.siswa')->find($request->kelompok_id);
+            if ($selectedKelompok) {
+                $siswas = $selectedKelompok->anggota->map(function($item) {
+                    $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
+                                                        ->whereDate('tanggal', Carbon::today())
+                                                        ->first();
+                    return $item->siswa;
+                });
+            }
         }
         
         return view('dosen.absensi.index', compact('kelompoks', 'selectedKelompok', 'siswas'));
@@ -103,7 +96,7 @@ class AbsensiDosenController extends Controller
             'url' => route('siswa.absensi.index'),
         ]);
         
-        return response()->json(['success' => true, 'message' => 'Absen berhasil']);
+        return response()->json(['success' => true, 'message' => 'Absen berhasil! Siswa sudah tercatat hadir.']);
     }
 
     public function rekap(Request $request)
@@ -144,67 +137,52 @@ class AbsensiDosenController extends Controller
         return view('dosen.absensi.rekap', compact('absensis', 'siswas', 'statistik'));
     }
 
-   public function exportExcel(Request $request)
-{
-    $this->initDosen();
-    
-    $dosenId = $this->dosen->id;
-    $kelompokIds = KelompokPkl::where('dosen_id', $dosenId)->pluck('id');
-    $siswaIds = KelompokSiswa::whereIn('kelompok_pkl_id', $kelompokIds)->pluck('siswa_id');
-    
-    $query = Absensi::with(['siswa', 'kelompokSiswa.kelompok'])
-             ->whereIn('siswa_id', $siswaIds);
-    
-    if ($request->filled('tanggal_mulai')) {
-        $query->whereDate('tanggal', '>=', $request->tanggal_mulai);
-    }
-    
-    if ($request->filled('tanggal_selesai')) {
-        $query->whereDate('tanggal', '<=', $request->tanggal_selesai);
-    }
-    
-    if ($request->filled('siswa_id')) {
-        $query->where('siswa_id', $request->siswa_id);
-    }
-    
-    $absensis = $query->orderBy('tanggal', 'desc')->get();
-    
-    $filename = 'rekap-absensi-' . date('Y-m-d') . '.csv';
-    
-    $headers = [
-        'Content-Type' => 'text/csv',
-        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-    ];
-    
-    $callback = function() use ($absensis) {
-        $handle = fopen('php://output', 'w');
+    public function exportExcel(Request $request)
+    {
+        $this->initDosen();
         
-        // Header CSV (UTF-8 BOM for Excel compatibility)
-        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+        $dosenId = $this->dosen->id;
+        $kelompokIds = KelompokPkl::where('dosen_id', $dosenId)->pluck('id');
+        $siswaIds = KelompokSiswa::whereIn('kelompok_pkl_id', $kelompokIds)->pluck('siswa_id');
         
-        fputcsv($handle, [
-            'No', 'Nama Siswa', 'NIM', 'Kelompok', 'Tanggal', 
-            'Jam Masuk', 'Jam Keluar', 'Status', 'Keterangan', 'Validasi Lokasi'
-        ]);
+        $absensis = Absensi::with(['siswa', 'kelompokSiswa.kelompok'])
+                    ->whereIn('siswa_id', $siswaIds)
+                    ->orderBy('tanggal', 'desc')
+                    ->get();
         
-        foreach ($absensis as $index => $absen) {
+        $filename = 'rekap-absensi-' . date('Y-m-d') . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+        
+        $callback = function() use ($absensis) {
+            $handle = fopen('php://output', 'w');
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+            
             fputcsv($handle, [
-                $index + 1,
-                $absen->siswa->name,
-                $absen->siswa->nomor_induk,
-                $absen->kelompokSiswa->kelompok->nama_kelompok,
-                \Carbon\Carbon::parse($absen->tanggal)->format('d/m/Y'),
-                $absen->jam_masuk ? \Carbon\Carbon::parse($absen->jam_masuk)->format('H:i:s') : '-',
-                $absen->jam_keluar ? \Carbon\Carbon::parse($absen->jam_keluar)->format('H:i:s') : '-',
-                ucfirst($absen->status),
-                $absen->keterangan ?? '-',
-                $absen->is_valid_location ? 'Valid' : 'Tidak Valid'
+                'No', 'Nama Siswa', 'NIM', 'Kelompok', 'Tanggal', 
+                'Jam Masuk', 'Jam Keluar', 'Status', 'Keterangan'
             ]);
-        }
+            
+            foreach ($absensis as $index => $absen) {
+                fputcsv($handle, [
+                    $index + 1,
+                    $absen->siswa->name,
+                    $absen->siswa->nomor_induk,
+                    $absen->kelompokSiswa->kelompok->nama_kelompok,
+                    Carbon::parse($absen->tanggal)->format('d/m/Y'),
+                    $absen->jam_masuk ? Carbon::parse($absen->jam_masuk)->format('H:i:s') : '-',
+                    $absen->jam_keluar ? Carbon::parse($absen->jam_keluar)->format('H:i:s') : '-',
+                    ucfirst($absen->status),
+                    $absen->keterangan ?? '-',
+                ]);
+            }
+            
+            fclose($handle);
+        };
         
-        fclose($handle);
-    };
-    
-    return response()->stream($callback, 200, $headers);
-}
+        return response()->stream($callback, 200, $headers);
+    }
 }

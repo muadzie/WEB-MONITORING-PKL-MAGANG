@@ -14,7 +14,7 @@ class Perusahaan extends Model
     protected $fillable = [
         'nama_perusahaan', 'alamat', 'telepon', 'email', 
         'bidang_usaha', 'deskripsi', 'kontak_person', 
-        'jabatan_kontak', 'logo', 'user_id', 'is_active'
+        'jabatan_kontak', 'logo', 'user_id', 'is_active','latitude','longitude',
     ];
 
     public function user()

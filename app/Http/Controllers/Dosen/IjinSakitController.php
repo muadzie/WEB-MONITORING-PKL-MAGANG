@@ -9,7 +9,6 @@ use App\Models\IjinSakit;
 use App\Models\KelompokPkl;
 use App\Models\KelompokSiswa;
 use App\Models\Notifikasi;
-use Carbon\Carbon;
 
 class IjinSakitController extends Controller
 {
@@ -34,7 +33,6 @@ class IjinSakitController extends Controller
         $this->initDosen();
         
         $dosenId = $this->dosen->id;
-        
         $kelompokIds = KelompokPkl::where('dosen_id', $dosenId)->pluck('id');
         $siswaIds = KelompokSiswa::whereIn('kelompok_pkl_id', $kelompokIds)->pluck('siswa_id');
         
@@ -45,19 +43,9 @@ class IjinSakitController extends Controller
             $query->where('status', $request->status);
         }
         
-        if ($request->filled('jenis')) {
-            $query->where('jenis', $request->jenis);
-        }
-        
         $ijinSakits = $query->orderBy('created_at', 'desc')->paginate(15);
         
-        $statistik = [
-            'pending' => IjinSakit::whereIn('siswa_id', $siswaIds)->where('status', 'pending')->count(),
-            'disetujui' => IjinSakit::whereIn('siswa_id', $siswaIds)->where('status', 'disetujui')->count(),
-            'ditolak' => IjinSakit::whereIn('siswa_id', $siswaIds)->where('status', 'ditolak')->count(),
-        ];
-        
-        return view('dosen.ijin-sakit.index', compact('ijinSakits', 'statistik'));
+        return view('dosen.ijin-sakit.index', compact('ijinSakits'));
     }
 
     public function approve(Request $request, $id)
@@ -73,16 +61,14 @@ class IjinSakitController extends Controller
             'approved_at' => now(),
         ]);
         
-        // Notifikasi ke siswa
         Notifikasi::create([
             'user_id' => $ijinSakit->siswa_id,
             'judul' => 'Pengajuan ' . ucfirst($ijinSakit->jenis) . ' Disetujui',
-            'pesan' => 'Pengajuan ' . $ijinSakit->jenis . ' Anda telah disetujui oleh dosen pembimbing.',
+            'pesan' => 'Pengajuan Anda telah disetujui oleh dosen pembimbing.',
             'tipe' => 'success',
-            'url' => route('siswa.ijin-sakit.show', $ijinSakit->id),
         ]);
         
-        return redirect()->back()->with('success', 'Pengajuan berhasil disetujui.');
+        return redirect()->back()->with('success', 'Pengajuan disetujui.');
     }
 
     public function reject(Request $request, $id)
@@ -102,13 +88,11 @@ class IjinSakitController extends Controller
             'approved_at' => now(),
         ]);
         
-        // Notifikasi ke siswa
         Notifikasi::create([
             'user_id' => $ijinSakit->siswa_id,
             'judul' => 'Pengajuan ' . ucfirst($ijinSakit->jenis) . ' Ditolak',
-            'pesan' => 'Pengajuan ' . $ijinSakit->jenis . ' Anda ditolak. Catatan: ' . $request->catatan_dosen,
+            'pesan' => 'Pengajuan Anda ditolak. Catatan: ' . $request->catatan_dosen,
             'tipe' => 'danger',
-            'url' => route('siswa.ijin-sakit.show', $ijinSakit->id),
         ]);
         
         return redirect()->back()->with('error', 'Pengajuan ditolak.');

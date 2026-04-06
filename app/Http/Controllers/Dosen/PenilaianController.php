@@ -9,48 +9,25 @@ use App\Models\Penilaian;
 use App\Models\KelompokSiswa;
 use App\Models\KelompokPkl;
 use App\Models\Notifikasi;
-use App\Models\Dosen;
 
 class PenilaianController extends Controller
 {
     protected $dosen;
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        // Tidak perlu middleware di sini untuk Laravel 11
-    }
-    
-    /**
-     * Initialize dosen data
-     */
+
     protected function initDosen()
     {
         if (Auth::check()) {
             $user = Auth::user();
-            
-            // Cek apakah user adalah dosen
             if ($user->role !== 'dosen') {
                 abort(403, 'Anda bukan dosen');
             }
-            
-            // Ambil data dosen dari relasi
             $this->dosen = $user->dosen;
-            
-            // Jika tidak ada data dosen, tampilkan error
             if (!$this->dosen) {
-                abort(404, 'Data dosen tidak ditemukan. Silakan hubungi admin.');
+                abort(404, 'Data dosen tidak ditemukan.');
             }
-        } else {
-            abort(401, 'Silakan login terlebih dahulu');
         }
     }
-    
-    /**
-     * Display a listing of penilaian.
-     */
+
     public function index(Request $request)
     {
         $this->initDosen();
@@ -78,10 +55,7 @@ class PenilaianController extends Controller
         
         return view('dosen.penilaian.index', compact('penilaians', 'kelompoks'));
     }
-    
-    /**
-     * Show the form for creating a new penilaian.
-     */
+
     public function create(Request $request)
     {
         $this->initDosen();
@@ -90,28 +64,24 @@ class PenilaianController extends Controller
         $kelompokSiswaId = $request->kelompok_siswa_id;
         
         if ($kelompokSiswaId) {
-            $kelompokSiswa = KelompokSiswa::with(['siswa', 'kelompok'])
-                              ->findOrFail($kelompokSiswaId);
+            $kelompokSiswa = KelompokSiswa::with(['siswa', 'kelompok'])->findOrFail($kelompokSiswaId);
             
-            // Cek kepemilikan
             if ($kelompokSiswa->kelompok->dosen_id != $dosenId) {
                 abort(403);
             }
             
-            // Cek apakah sudah dinilai
             $existing = Penilaian::where('kelompok_siswa_id', $kelompokSiswaId)
                         ->where('penilai', 'dosen')
                         ->first();
             
             if ($existing) {
                 return redirect()->route('dosen.penilaian.edit', $existing->id)
-                    ->with('info', 'Siswa ini sudah dinilai. Silakan edit nilai yang ada.');
+                    ->with('info', 'Siswa ini sudah dinilai.');
             }
             
             return view('dosen.penilaian.create', compact('kelompokSiswa'));
         }
         
-        // Tampilkan pilihan siswa
         $kelompoks = KelompokPkl::with(['anggota.siswa'])
                      ->where('dosen_id', $dosenId)
                      ->where('status', 'selesai')
@@ -119,10 +89,7 @@ class PenilaianController extends Controller
         
         return view('dosen.penilaian.pilih-siswa', compact('kelompoks'));
     }
-    
-    /**
-     * Store a newly created penilaian in storage.
-     */
+
     public function store(Request $request)
     {
         $this->initDosen();
@@ -138,12 +105,10 @@ class PenilaianController extends Controller
         $kelompokSiswa = KelompokSiswa::findOrFail($request->kelompok_siswa_id);
         $dosenId = $this->dosen->id;
         
-        // Cek kepemilikan
         if ($kelompokSiswa->kelompok->dosen_id != $dosenId) {
             abort(403);
         }
         
-        // Hitung nilai akhir
         $nilaiAkhir = ($request->nilai_laporan + $request->nilai_presentasi + $request->nilai_sikap) / 3;
         
         $penilaian = Penilaian::create([
@@ -157,7 +122,6 @@ class PenilaianController extends Controller
             'penilai_id' => Auth::id(),
         ]);
         
-        // Notifikasi ke siswa
         Notifikasi::create([
             'user_id' => $kelompokSiswa->siswa_id,
             'judul' => 'Penilaian Dosen',
@@ -169,56 +133,34 @@ class PenilaianController extends Controller
         return redirect()->route('dosen.penilaian.index')
             ->with('success', 'Penilaian berhasil disimpan.');
     }
-    
-    /**
-     * Display the specified penilaian.
-     */
+
     public function show(Penilaian $penilaian)
     {
         $this->initDosen();
         
-        $dosenId = $this->dosen->id;
-        
-        // Cek kepemilikan
-        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $dosenId) {
+        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
         return view('dosen.penilaian.show', compact('penilaian'));
     }
-    
-    /**
-     * Show the form for editing the specified penilaian.
-     */
+
     public function edit(Penilaian $penilaian)
     {
         $this->initDosen();
         
-        $dosenId = $this->dosen->id;
-        
-        // Cek kepemilikan
-        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $dosenId) {
-            abort(403);
-        }
-        
-        if ($penilaian->penilai != 'dosen') {
+        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
         return view('dosen.penilaian.edit', compact('penilaian'));
     }
-    
-    /**
-     * Update the specified penilaian in storage.
-     */
+
     public function update(Request $request, Penilaian $penilaian)
     {
         $this->initDosen();
         
-        $dosenId = $this->dosen->id;
-        
-        // Cek kepemilikan
-        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $dosenId) {
+        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
@@ -229,7 +171,6 @@ class PenilaianController extends Controller
             'catatan' => 'nullable|string',
         ]);
         
-        // Hitung nilai akhir
         $nilaiAkhir = ($request->nilai_laporan + $request->nilai_presentasi + $request->nilai_sikap) / 3;
         
         $penilaian->update([
@@ -243,18 +184,12 @@ class PenilaianController extends Controller
         return redirect()->route('dosen.penilaian.index')
             ->with('success', 'Penilaian berhasil diperbarui.');
     }
-    
-    /**
-     * Remove the specified penilaian from storage.
-     */
+
     public function destroy(Penilaian $penilaian)
     {
         $this->initDosen();
         
-        $dosenId = $this->dosen->id;
-        
-        // Cek kepemilikan
-        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $dosenId) {
+        if ($penilaian->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
             abort(403);
         }
         

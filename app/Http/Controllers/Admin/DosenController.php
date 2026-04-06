@@ -149,21 +149,30 @@ class DosenController extends Controller
             ->with('success', 'Data dosen berhasil diperbarui.');
     }
     
-    public function destroy(Dosen $dosen)
-    {
-        // Hapus foto
-        if ($dosen->foto) {
-            Storage::disk('public')->delete($dosen->foto);
-        }
-        
-        // Hapus user terkait jika ada
-        if ($dosen->user) {
-            $dosen->user->delete();
-        }
-        
-        $dosen->delete();
-        
-        return redirect()->route('admin.dosens.index')
-            ->with('success', 'Data dosen berhasil dihapus.');
+   public function destroy(Dosen $dosen)
+{
+    // Hapus foto jika ada
+    if ($dosen->foto) {
+        Storage::disk('public')->delete($dosen->foto);
     }
+    
+    // Update foreign key di tabel kelompok_pkls
+    \DB::table('kelompok_pkls')->where('dosen_id', $dosen->id)->update(['dosen_id' => null]);
+    
+    // Update foreign key di tabel absensis
+    \DB::table('absensis')->where('dosen_id', $dosen->id)->update(['dosen_id' => null]);
+    
+    // Update foreign key di tabel penilaians
+    \DB::table('penilaians')->where('penilai_id', $dosen->user_id)->update(['penilai_id' => null]);
+    
+    // Hapus user terkait jika ada
+    if ($dosen->user) {
+        $dosen->user->delete();
+    }
+    
+    $dosen->delete();
+    
+    return redirect()->route('admin.dosens.index')
+        ->with('success', 'Data dosen berhasil dihapus.');
+}
 }

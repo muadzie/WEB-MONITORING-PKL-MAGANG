@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
 use App\Models\KelompokSiswa;
-use App\Models\Logbook;
 use Carbon\Carbon;
 
 class AbsensiController extends Controller
@@ -21,6 +20,14 @@ class AbsensiController extends Controller
                 ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
         }
 
+        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
+        
+        // Cek apakah perusahaan punya koordinat
+        if (!$perusahaan->latitude || !$perusahaan->longitude) {
+            return redirect()->route('siswa.dashboard')
+                ->with('error', 'Lokasi perusahaan belum diatur oleh admin. Silakan hubungi admin.');
+        }
+
         $absensis = Absensi::where('siswa_id', Auth::id())
                     ->orderBy('tanggal', 'desc')
                     ->paginate(15);
@@ -29,8 +36,6 @@ class AbsensiController extends Controller
         $todayAbsen = Absensi::where('siswa_id', Auth::id())
                     ->whereDate('tanggal', $today)
                     ->first();
-
-        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
 
         return view('siswa.absensi.index', compact('absensis', 'todayAbsen', 'perusahaan'));
     }
@@ -43,6 +48,24 @@ class AbsensiController extends Controller
             return response()->json(['error' => 'Belum terdaftar kelompok'], 400);
         }
 
+        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
+        
+        // Validasi lokasi
+        $distance = $this->calculateDistance(
+            $request->latitude,
+            $request->longitude,
+            $perusahaan->latitude,
+            $perusahaan->longitude
+        );
+        
+        $radius = 100; // meter
+        
+        if ($distance > $radius) {
+            return response()->json([
+                'error' => 'Anda berada di luar radius magang. Jarak: ' . round($distance, 2) . ' meter (Maksimal 100 meter)'
+            ], 400);
+        }
+
         $today = Carbon::today();
         $existing = Absensi::where('siswa_id', Auth::id())
                     ->whereDate('tanggal', $today)
@@ -52,17 +75,6 @@ class AbsensiController extends Controller
             return response()->json(['error' => 'Anda sudah absen hari ini'], 400);
         }
 
-        // Validasi lokasi
-        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
-        $jarak = $this->hitungJarak(
-            $request->latitude,
-            $request->longitude,
-            $perusahaan->latitude,
-            $perusahaan->longitude
-        );
-
-        $isValid = $jarak <= 100; // Maksimal 100 meter
-
         $absensi = Absensi::create([
             'siswa_id' => Auth::id(),
             'kelompok_siswa_id' => $kelompokSiswa->id,
@@ -70,31 +82,11 @@ class AbsensiController extends Controller
             'jam_masuk' => now(),
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'lokasi_absen' => $request->lokasi,
-            'is_valid_location' => $isValid,
-            'status' => $isValid ? 'hadir' : 'alpha',
+            'is_valid_location' => true,
+            'status' => 'hadir',
         ]);
 
-        // Cek apakah hari ini ada izin/sakit
-        $ijinSakit = \App\Models\IjinSakit::where('siswa_id', Auth::id())
-                    ->where('status', 'disetujui')
-                    ->whereDate('tanggal_mulai', '<=', $today)
-                    ->whereDate('tanggal_selesai', '>=', $today)
-                    ->first();
-
-        if ($ijinSakit) {
-            $absensi->update([
-                'status' => $ijinSakit->jenis,
-                'keterangan' => $ijinSakit->alasan,
-                'bukti_foto' => $ijinSakit->bukti_foto,
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'is_valid' => $isValid,
-            'message' => $isValid ? 'Absen berhasil' : 'Anda di luar radius lokasi magang'
-        ]);
+        return response()->json(['success' => true, 'message' => 'Absen berhasil! Jarak: ' . round($distance, 2) . ' meter']);
     }
 
     public function absenKeluar(Request $request)
@@ -117,7 +109,7 @@ class AbsensiController extends Controller
         return response()->json(['success' => true, 'message' => 'Absen keluar berhasil']);
     }
 
-    private function hitungJarak($lat1, $lon1, $lat2, $lon2)
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
         $earthRadius = 6371000; // meter
         

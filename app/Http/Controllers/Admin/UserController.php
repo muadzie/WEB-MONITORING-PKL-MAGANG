@@ -172,26 +172,67 @@ class UserController extends Controller
     }
     
     public function destroy(User $user)
-    {
-        // Hapus foto jika ada
-        if ($user->foto) {
-            Storage::disk('public')->delete($user->foto);
-        }
-        
-        // Hapus data terkait
-        if ($user->dosen) {
-            $user->dosen->delete();
-        }
-        if ($user->perusahaan) {
-            $user->perusahaan->delete();
-        }
-        
-        $user->delete();
-        
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User berhasil dihapus.');
+{
+    // Hapus foto jika ada
+    if ($user->foto) {
+        Storage::disk('public')->delete($user->foto);
     }
     
+    // ==================== HAPUS DATA DOSEN ====================
+    if ($user->dosen) {
+        $dosenId = $user->dosen->id;
+        
+        \DB::table('absensis')->where('dosen_id', $dosenId)->update(['dosen_id' => null]);
+        \DB::table('kelompok_pkls')->where('dosen_id', $dosenId)->update(['dosen_id' => null]);
+        \DB::table('penilaians')->where('penilai_id', $user->id)->update(['penilai_id' => null]);
+        \DB::table('notifikasis')->where('user_id', $user->id)->update(['user_id' => null]);
+        
+        $user->dosen->delete();
+    }
+    
+    // ==================== HAPUS DATA PERUSAHAAN ====================
+    if ($user->perusahaan) {
+        $perusahaanId = $user->perusahaan->id;
+        
+        \DB::table('kelompok_pkls')->where('perusahaan_id', $perusahaanId)->update(['perusahaan_id' => null]);
+        
+        $user->perusahaan->delete();
+    }
+    
+    // ==================== HAPUS DATA SISWA ====================
+    if ($user->kelompokSiswa) {
+        foreach ($user->kelompokSiswa as $anggota) {
+            // Update foreign key di tabel logbooks
+            \DB::table('logbooks')->where('kelompok_siswa_id', $anggota->id)->update(['kelompok_siswa_id' => null]);
+            
+            // Update foreign key di tabel laporans
+            \DB::table('laporans')->where('kelompok_siswa_id', $anggota->id)->update(['kelompok_siswa_id' => null]);
+            
+            // Update foreign key di tabel penilaians
+            \DB::table('penilaians')->where('kelompok_siswa_id', $anggota->id)->update(['kelompok_siswa_id' => null]);
+            
+            // Update foreign key di tabel absensis
+            \DB::table('absensis')->where('kelompok_siswa_id', $anggota->id)->update(['kelompok_siswa_id' => null]);
+            
+            // Update foreign key di tabel ijin_sakit
+            \DB::table('ijin_sakit')->where('kelompok_siswa_id', $anggota->id)->update(['kelompok_siswa_id' => null]);
+            
+            $anggota->delete();
+        }
+    }
+    
+    // Update data lain yang terkait dengan user_id
+    \DB::table('absensis')->where('siswa_id', $user->id)->update(['siswa_id' => null]);
+    \DB::table('ijin_sakit')->where('siswa_id', $user->id)->update(['siswa_id' => null]);
+    \DB::table('notifikasis')->where('user_id', $user->id)->update(['user_id' => null]);
+    \DB::table('penilaians')->where('penilai_id', $user->id)->update(['penilai_id' => null]);
+    
+    // Hapus user
+    $user->delete();
+    
+    return redirect()->route('admin.users.index')
+        ->with('success', 'User berhasil dihapus.');
+}
     public function toggleStatus(User $user)
     {
         $user->update(['is_active' => !$user->is_active]);

@@ -104,40 +104,42 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     
     // ==================== DOSEN ROUTES ====================
-    Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->group(function () {
-        
-        // Dashboard
-        Route::get('/dashboard', [App\Http\Controllers\Dosen\BimbinganController::class, 'dashboard'])->name('dashboard');
-        
-        // Bimbingan
-        Route::get('/bimbingan', [App\Http\Controllers\Dosen\BimbinganController::class, 'index'])->name('bimbingan.index');
-        Route::get('/bimbingan/{kelompok}', [App\Http\Controllers\Dosen\BimbinganController::class, 'show'])->name('bimbingan.show');
-        
-        // Logbook
-        Route::get('/logbook/pending', [App\Http\Controllers\Dosen\BimbinganController::class, 'logbookPending'])->name('logbook.pending');
-        Route::get('/logbook/{logbook}/review', [App\Http\Controllers\Dosen\BimbinganController::class, 'reviewLogbook'])->name('logbook.review');
-        Route::get('/logbook/{logbook}/download', [App\Http\Controllers\Dosen\BimbinganController::class, 'downloadLogbook'])->name('logbook.download');
-        
-        // Laporan
-        Route::get('/laporan', [App\Http\Controllers\Dosen\BimbinganController::class, 'laporanIndex'])->name('laporan.index');
-        Route::get('/laporan/{laporan}/review', [App\Http\Controllers\Dosen\BimbinganController::class, 'reviewLaporan'])->name('laporan.review');
-        Route::get('/laporan/{laporan}/download/{type}', [App\Http\Controllers\Dosen\BimbinganController::class, 'downloadLaporan'])->name('laporan.download');
-        
-        // Penilaian
-        Route::resource('penilaian', App\Http\Controllers\Dosen\PenilaianController::class);
-        Route::get('/penilaian/create/select-siswa', [App\Http\Controllers\Dosen\PenilaianController::class, 'create'])->name('penilaian.select-siswa');
-        
-        // Absensi
-        Route::get('/absensi/siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'index'])->name('absensi.siswa');
-        Route::get('/absensi/rekap', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'rekap'])->name('absensi.rekap');
-        Route::get('/absensi/export-excel', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportExcel'])->name('absensi.export-excel');
-        Route::post('/absensi/absen-siswa/{siswaId}', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'absenSiswa'])->name('absensi.absen-siswa');
-        
-        // Izin Sakit
-        Route::get('/ijin-sakit', [App\Http\Controllers\Dosen\IjinSakitController::class, 'index'])->name('ijin-sakit.index');
-        Route::post('/ijin-sakit/{id}/approve', [App\Http\Controllers\Dosen\IjinSakitController::class, 'approve'])->name('ijin-sakit.approve');
-        Route::post('/ijin-sakit/{id}/reject', [App\Http\Controllers\Dosen\IjinSakitController::class, 'reject'])->name('ijin-sakit.reject');
-    });
+    // ==================== DOSEN ROUTES ====================
+Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->group(function () {
+    
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\Dosen\BimbinganController::class, 'dashboard'])->name('dashboard');
+    
+    // Bimbingan
+    Route::get('/bimbingan', [App\Http\Controllers\Dosen\BimbinganController::class, 'index'])->name('bimbingan.index');
+    Route::get('/bimbingan/{kelompok}', [App\Http\Controllers\Dosen\BimbinganController::class, 'show'])->name('bimbingan.show');
+    
+    // Logbook
+    Route::get('/logbook/pending', [App\Http\Controllers\Dosen\BimbinganController::class, 'logbookPending'])->name('logbook.pending');
+    Route::get('/logbook/{logbook}/review', [App\Http\Controllers\Dosen\BimbinganController::class, 'reviewLogbook'])->name('logbook.review');
+    Route::post('/logbook/{logbook}/approve', [App\Http\Controllers\Dosen\BimbinganController::class, 'approveLogbook'])->name('logbook.approve');
+    
+    // Laporan
+    Route::get('/laporan', [App\Http\Controllers\Dosen\BimbinganController::class, 'laporanIndex'])->name('laporan.index');
+    Route::get('/laporan/{laporan}/review', [App\Http\Controllers\Dosen\BimbinganController::class, 'reviewLaporan'])->name('laporan.review');
+    Route::post('/laporan/{laporan}/review', [App\Http\Controllers\Dosen\BimbinganController::class, 'submitReviewLaporan'])->name('laporan.submit-review');
+    Route::get('/laporan/{laporan}/download/{type}', [App\Http\Controllers\Dosen\BimbinganController::class, 'downloadLaporan'])->name('laporan.download');
+
+    
+    // Penilaian
+    Route::resource('penilaian', App\Http\Controllers\Dosen\PenilaianController::class);
+
+    // Absensi
+    Route::get('/absensi/siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'index'])->name('absensi.siswa');
+    Route::get('/absensi/rekap', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'rekap'])->name('absensi.rekap');
+    Route::get('/absensi/export-excel', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportExcel'])->name('absensi.export-excel');
+    Route::post('/absensi/absen-siswa/{siswaId}', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'absenSiswa'])->name('absensi.absen-siswa');
+    
+    // Izin Sakit
+    Route::get('/ijin-sakit', [App\Http\Controllers\Dosen\IjinSakitController::class, 'index'])->name('ijin-sakit.index');
+    Route::post('/ijin-sakit/{id}/approve', [App\Http\Controllers\Dosen\IjinSakitController::class, 'approve'])->name('ijin-sakit.approve');
+    Route::post('/ijin-sakit/{id}/reject', [App\Http\Controllers\Dosen\IjinSakitController::class, 'reject'])->name('ijin-sakit.reject');
+});
     
     // ==================== PT ROUTES ====================
     Route::prefix('pt')->name('pt.')->middleware(['auth', 'role:pt'])->group(function () {

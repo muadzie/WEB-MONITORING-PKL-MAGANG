@@ -41,18 +41,20 @@ class PerusahaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_perusahaan' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'telepon' => 'required|string|max:20',
-            'email' => 'required|email|unique:perusahaans|unique:users,email',
-            'bidang_usaha' => 'required|string',
-            'deskripsi' => 'nullable|string',
-            'kontak_person' => 'required|string|max:255',
-            'jabatan_kontak' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
-            'create_user' => 'boolean',
-            'password' => 'required_if:create_user,true|nullable|min:8|confirmed',
-        ]);
+        'nama_perusahaan' => 'required|string|max:255',
+        'alamat' => 'required|string',
+        'telepon' => 'required|string|max:20',
+        'email' => 'required|email|unique:perusahaans|unique:users,email',
+        'bidang_usaha' => 'required|string',
+        'deskripsi' => 'nullable|string',
+        'kontak_person' => 'required|string|max:255',
+        'jabatan_kontak' => 'required|string|max:255',
+        'logo' => 'nullable|image|max:2048',
+        'latitude' => 'nullable|numeric|between:-90,90',
+        'longitude' => 'nullable|numeric|between:-180,180',
+        'create_user' => 'boolean',
+        'password' => 'required_if:create_user,true|nullable|min:8|confirmed',
+    ]);
         
         // Upload logo
         $logoPath = null;
@@ -90,6 +92,8 @@ class PerusahaanController extends Controller
             'logo' => $logoPath,
             'user_id' => $userId,
             'is_active' => true,
+            'latitude' => $request->latitude,   // Tambahkan ini
+            'longitude' => $request->longitude, // Tambahkan iniD
         ]);
         
         return redirect()->route('admin.perusahaans.index')
@@ -113,18 +117,11 @@ class PerusahaanController extends Controller
             'kontak_person' => 'required|string|max:255',
             'jabatan_kontak' => 'required|string|max:255',
             'logo' => 'nullable|image|max:2048',
+            'latitude' => 'nullable|numeric|between:-90,90',
+        'longitude' => 'nullable|numeric|between:-180,180',
         ]);
         
-        $data = [
-            'nama_perusahaan' => $request->nama_perusahaan,
-            'alamat' => $request->alamat,
-            'telepon' => $request->telepon,
-            'email' => $request->email,
-            'bidang_usaha' => $request->bidang_usaha,
-            'deskripsi' => $request->deskripsi,
-            'kontak_person' => $request->kontak_person,
-            'jabatan_kontak' => $request->jabatan_kontak,
-        ];
+        $data = $request->all();
         
         // Upload logo baru
         if ($request->hasFile('logo')) {
@@ -150,23 +147,29 @@ class PerusahaanController extends Controller
             ->with('success', 'Data perusahaan berhasil diperbarui.');
     }
     
-    public function destroy(Perusahaan $perusahaan)
-    {
-        // Hapus logo
-        if ($perusahaan->logo) {
-            Storage::disk('public')->delete($perusahaan->logo);
-        }
-        
-        // Hapus user terkait jika ada
-        if ($perusahaan->user) {
-            $perusahaan->user->delete();
-        }
-        
-        $perusahaan->delete();
-        
-        return redirect()->route('admin.perusahaans.index')
-            ->with('success', 'Data perusahaan berhasil dihapus.');
+   public function destroy(Perusahaan $perusahaan)
+{
+    // Hapus logo jika ada
+    if ($perusahaan->logo) {
+        Storage::disk('public')->delete($perusahaan->logo);
     }
+    
+    // Update foreign key di tabel kelompok_pkls (set perusahaan_id menjadi null)
+    \DB::table('kelompok_pkls')->where('perusahaan_id', $perusahaan->id)->update(['perusahaan_id' => null]);
+    
+    
+    // Hapus user terkait jika ada
+    if ($perusahaan->user) {
+        // Nonaktifkan user, jangan hapus karena bisa memiliki relasi lain
+        $perusahaan->user->update(['is_active' => false]);
+    }
+    
+    // Hapus perusahaan
+    $perusahaan->delete();
+    
+    return redirect()->route('admin.perusahaans.index')
+        ->with('success', 'Data perusahaan berhasil dihapus.');
+}
     
     public function toggleStatus(Perusahaan $perusahaan)
     {
