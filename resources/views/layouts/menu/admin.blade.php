@@ -117,18 +117,13 @@
                 <p>Rekap Tahunan</p>
             </a>
         </li>
-        <li class="nav-item">
-            <a href="{{ route('admin.export.index') }}" class="nav-link {{ request()->routeIs('admin.export*') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p><i class="fas fa-download"></i> Menu Export</p>
-            </a>
-        </li>
+       
     </ul>
 </li>
 <!-- ===== MENU EXPORT ===== -->
-<li class="nav-item">
-    <a href="{{ route('admin.export.index') }}" class="nav-link {{ request()->routeIs('admin.export*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-download"></i>
-        <p>Export Data</p>
-    </a>
-</li>
+ <li class="nav-item">
+            <a href="{{ route('admin.export.index') }}" class="nav-link {{ request()->routeIs('admin.export*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-download"></i>
+                <p> Menu Export</p>
+            </a>
+        </li>
