@@ -1,663 +1,549 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistem Monitoring PKL - Kelola PKL dengan Mudah</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISFO PKL - Platform Monitoring PKL Modern</title>
     
-    <!-- Google Fonts - Lebih Modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Bootstrap 5 (lebih modern) -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+        }
+        
         * {
-            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background: var(--white);
             overflow-x: hidden;
         }
         
-        /* Navbar Modern dengan Glassmorphism */
-        .navbar-modern {
-            background: rgba(255, 255, 255, 0.1);
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             padding: 1rem 0;
             transition: all 0.3s ease;
         }
         
-        .navbar-modern.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-modern.scrolled .navbar-brand,
-        .navbar-modern.scrolled .nav-link {
-            color: #333 !important;
+        .navbar.scrolled {
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
         }
         
         .navbar-brand {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: white !important;
-            letter-spacing: -0.5px;
-            transition: all 0.3s ease;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
         }
         
         .navbar-brand i {
-            color: #ffd700;
-            margin-right: 10px;
-            font-size: 2rem;
+            color: var(--secondary);
+            margin-right: 0.5rem;
         }
         
         .nav-link {
             font-weight: 500;
-            color: white !important;
-            margin: 0 0.8rem;
-            padding: 0.5rem 0 !important;
-            position: relative;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-        
-        .nav-link:before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #ffd700;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover:before {
-            width: 100%;
+            color: var(--dark);
+            margin: 0 0.5rem;
+            transition: color 0.2s;
         }
         
         .nav-link:hover {
-            color: #ffd700 !important;
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
         
-        .btn-login {
-            background: white;
-            color: #667eea !important;
-            border-radius: 50px;
-            padding: 0.6rem 1.8rem !important;
-            font-weight: 600;
-            margin-left: 1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            color: #764ba2 !important;
-        }
-        
-        .btn-login:before {
-            display: none;
-        }
-        
-        .btn-register {
+        .btn-outline-primary {
+            border: 1px solid var(--primary);
+            color: var(--primary);
             background: transparent;
-            color: white !important;
-            border: 2px solid white;
-            border-radius: 50px;
-            padding: 0.6rem 1.8rem !important;
-            font-weight: 600;
-            margin-left: 0.5rem;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            transition: all 0.2s;
         }
         
-        .btn-register:hover {
-            background: white;
-            color: #667eea !important;
+        .btn-outline-primary:hover {
+            background: var(--primary);
+            color: white;
             transform: translateY(-2px);
         }
         
-        .btn-register:before {
-            display: none;
-        }
-        
-        /* Hero Section */
-        .hero-section {
-            padding: 100px 0 80px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-section:before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        
-        .hero-section:after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
+        /* Hero */
+        .hero {
+            padding: 8rem 0 5rem;
+            background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
         }
         
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 800;
-            margin-bottom: 20px;
             line-height: 1.2;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .hero-title span {
+            color: var(--primary);
         }
         
         .hero-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .hero-stat h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 0;
+        }
+        
+        .hero-stat p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0;
         }
         
         .hero-image {
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+            text-align: right;
+        }
+        .hero-image img {
+            animation: floatImage 4s ease-in-out infinite;
+            max-width: 85%;
+            display: inline-block;
+            transform: translateX(-20px);
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background: transparent !important;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        @keyframes floatImage {
+            0% { transform: translateY(0px) translateX(-20px); }
+            50% { transform: translateY(-15px) translateX(-20px); }
+            100% { transform: translateY(0px) translateX(-20px); }
         }
         
         /* Feature Cards */
-        .feature-section {
-            padding: 80px 0;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(5px);
-            border-radius: 50px 50px 0 0;
-            margin-top: 50px;
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
         }
         
         .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px 25px;
-            color: white;
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 2rem;
             transition: all 0.3s ease;
             height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-card:before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .feature-card:hover:before {
-            opacity: 1;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
+            border-color: var(--primary);
         }
         
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: #ffd700;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: rgba(79,70,229,0.1);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: var(--primary);
         }
         
         .feature-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
         }
         
-        .feature-description {
-            color: rgba(255,255,255,0.8);
-            line-height: 1.6;
-            margin-bottom: 0;
+        .feature-desc {
+            color: var(--gray);
+            line-height: 1.5;
         }
         
         /* Stats Section */
         .stats-section {
-            padding: 60px 0;
-            background: white;
-            border-radius: 50px 50px 0 0;
-            margin-top: 50px;
+            background: var(--primary);
+            border-radius: 2rem;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
         }
         
-        .stat-card {
+        .stat-item {
             text-align: center;
-            padding: 30px;
-            border-radius: 20px;
-            background: #f8f9fa;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: white;
         }
         
         .stat-number {
-            font-family: 'Poppins', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
         }
         
         .stat-label {
-            font-size: 1.1rem;
-            color: #666;
-            font-weight: 500;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         
-        /* About Section */
-        .about-section {
-            padding: 80px 0;
-            background: #f8f9fa;
+        /* How It Works */
+        .step-card {
+            text-align: center;
+            padding: 1.5rem;
         }
         
-        .about-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .about-card:hover {
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .section-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.2rem;
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary);
+            color: white;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .section-subtitle {
-            color: #666;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-        }
-        
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding-left: 80px;
-            margin-bottom: 30px;
-        }
-        
-        .timeline-icon {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 50px;
-            height: 50px;
-            background: #667eea;
+            font-size: 1.2rem;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            margin: 0 auto 1rem;
         }
         
-        .timeline-content {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        .step-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
         
-        .timeline-content h4 {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+        .step-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
         }
         
-        .timeline-content p {
-            color: #666;
-            margin-bottom: 0;
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .contact-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: all 0.3s ease;
+        /* Testimonials */
+        .testimonial-card {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 2rem;
             height: 100%;
         }
         
-        .contact-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.2);
+        .testimonial-avatar {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
         }
         
-        .contact-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: #ffd700;
-        }
-        
-        .contact-card h5 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .contact-card p {
-            color: rgba(255,255,255,0.9);
+        .testimonial-name {
+            font-weight: 700;
             margin-bottom: 0;
-            line-height: 1.6;
+        }
+        
+        .testimonial-role {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .testimonial-text {
+            margin-top: 1rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        .rating i {
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+        
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            padding-top: 0.5rem;
+            color: var(--gray);
+            display: none;
+        }
+        
+        .faq-answer.show {
+            display: block;
+        }
+        
+        /* CTA */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-button {
+            background: white;
+            color: var(--primary);
+            padding: 0.75rem 2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         /* Footer */
         .footer {
-            background: #1a1a2e;
-            color: white;
-            padding: 60px 0 20px;
+            background: var(--dark);
+            color: #94a3b8;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
         }
         
-        .footer h5 {
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #ffd700;
-        }
-        
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-links a {
-            color: rgba(255,255,255,0.7);
+        .footer a {
+            color: #94a3b8;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: color 0.2s;
         }
         
-        .footer-links a:hover {
-            color: #ffd700;
-            padding-left: 5px;
+        .footer a:hover {
+            color: white;
         }
         
-        .social-links a {
+        .social-icons a {
             display: inline-block;
-            width: 40px;
-            height: 40px;
+            width: 2.2rem;
+            height: 2.2rem;
             background: rgba(255,255,255,0.1);
             border-radius: 50%;
             text-align: center;
-            line-height: 40px;
+            line-height: 2.2rem;
+            margin-right: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
             color: white;
-            margin-right: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .social-links a:hover {
-            background: #ffd700;
-            color: #1a1a2e;
-            transform: translateY(-3px);
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 40px;
-            padding-top: 20px;
-            text-align: center;
-            color: rgba(255,255,255,0.5);
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
-            .navbar-brand {
-                font-size: 1.5rem;
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1rem;
             }
-            .btn-login, .btn-register {
-                margin: 5px 0;
-                display: block;
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .hero-image {
                 text-align: center;
+                margin-top: 2rem;
+            }
+            .hero-image img {
+                max-width: 70%;
+                transform: translateX(0);
+            }
+            @keyframes floatImage {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-15px); }
+                100% { transform: translateY(0px); }
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Navbar Modern -->
-<nav class="navbar navbar-expand-lg navbar-modern fixed-top" id="mainNav">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top" id="navbar">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('home') }}">
-            <i class="fas fa-graduation-cap"></i>
-            SISFO PKL
-        </a>
+      <a class="navbar-brand" href="{{ route('home') }}">
+    <img src="https://c.top4top.io/p_3749c8ad71.png" alt="Logo SISFO PKL" style="height: 32px; margin-right: 8px; vertical-align: middle;">
+    SISFO PKL
+</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#features">Fitur</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">Tentang</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Kontak</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn-login" href="{{ route('login') }}">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn-register" href="{{ route('register') }}">
-                        <i class="fas fa-user-plus me-2"></i>Register
-                    </a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="#home">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="#features">Fitur</a></li>
+                <li class="nav-item"><a class="nav-link" href="#how-it-works">Cara Kerja</a></li>
+                <li class="nav-item"><a class="nav-link" href="#testimonials">Testimoni</a></li>
+                <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+                <li class="nav-item"><a class="btn btn-primary ms-2" href="{{ route('login') }}">Masuk</a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary ms-2" href="{{ route('register') }}">Daftar</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
 <!-- Hero Section -->
-<section class="hero-section" id="home">
+<section class="hero" id="home">
     <div class="container">
-        <div class="row align-items-center hero-content">
+        <div class="row align-items-center">
             <div class="col-lg-6" data-aos="fade-right">
-                <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill">
-                    <i class="fas fa-rocket me-2"></i>Sistem Monitoring PKL Terintegrasi
-                </span>
-                <h1 class="hero-title">
-                    Kelola PKL <br>dengan <span style="color: #ffd700;">Mudah & Efisien</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Platform terintegrasi untuk monitoring Praktek Kerja Lapangan. 
-                    Memudahkan koordinasi antara mahasiswa, dosen, dan perusahaan dalam satu sistem.
-                </p>
-                <div class="mt-4">
-                    <a href="{{ route('login') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill me-3">
-                        <i class="fas fa-play me-2"></i>Mulai Sekarang
-                    </a>
-                    <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
-                        <i class="fas fa-info-circle me-2"></i>Pelajari
-                    </a>
+                <h1 class="hero-title">Kelola PKL <span>Lebih Mudah</span> & Profesional</h1>
+                <p class="hero-subtitle">Platform terintegrasi untuk monitoring Praktek Kerja Lapangan. Pantau logbook, laporan, dan penilaian secara real-time.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ route('register') }}" class="btn btn-primary px-4 py-2">Mulai Sekarang</a>
+                    <a href="#features" class="btn btn-outline-primary px-4 py-2">Pelajari Lebih</a>
                 </div>
-                <div class="mt-5">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle fa-2x text-warning me-3"></i>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">500+</h6>
-                                    <small>Mahasiswa</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle fa-2x text-warning me-3"></i>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">50+</h6>
-                                    <small>Dosen</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle fa-2x text-warning me-3"></i>
-                                <div>
-                                    <h6 class="mb-0 fw-bold">100+</h6>
-                                    <small>Perusahaan</small>
-                                </div>
-                            </div>
-                        </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <h3>500+</h3>
+                        <p>Mahasiswa</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>50+</h3>
+                        <p>Dosen</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>100+</h3>
+                        <p>Perusahaan</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 text-center" data-aos="fade-left">
-                <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" 
-                     alt="Hero Image" class="img-fluid hero-image" style="max-width: 80%;">
+            <div class="col-lg-6 hero-image" data-aos="fade-left">
+                <img src="https://c.top4top.io/p_3749c8ad71.png" alt="Hero Illustration">
             </div>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="feature-section" id="features">
+<section id="features" class="py-5">
     <div class="container">
-        <div class="text-center text-white mb-5" data-aos="fade-up">
-            <h2 class="section-title text-white">Fitur Unggulan</h2>
-            <p class="section-subtitle text-white-50">Kemudahan dalam setiap proses PKL</p>
-        </div>
+        <h2 class="section-title" data-aos="fade-up">Fitur Unggulan</h2>
+        <p class="section-subtitle" data-aos="fade-up">Semua yang Anda butuhkan untuk monitoring PKL</p>
         <div class="row g-4">
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-book"></i></div>
                     <h3 class="feature-title">Logbook Digital</h3>
-                    <p class="feature-description">Catat kegiatan PKL harian dengan mudah. Dilengkapi upload dokumentasi dan approval real-time dari dosen & PT.</p>
+                    <p class="feature-desc">Catat kegiatan harian dengan mudah, lengkapi dokumentasi dan dapatkan approval real-time.</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
                     <h3 class="feature-title">Laporan Online</h3>
-                    <p class="feature-description">Upload laporan PKL, review oleh dosen, dan tracking revisi dalam satu platform terintegrasi.</p>
+                    <p class="feature-desc">Upload laporan PKL, tracking revisi, dan review langsung oleh dosen pembimbing.</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-star"></i></div>
                     <h3 class="feature-title">Penilaian Terpadu</h3>
-                    <p class="feature-description">Penilaian dari dosen dan PT dengan perhitungan otomatis. Hasil nilai bisa diakses langsung oleh mahasiswa.</p>
+                    <p class="feature-desc">Penilaian dari dosen dan PT dengan perhitungan otomatis, hasil langsung terlihat.</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3 class="feature-title">Multi User Role</h3>
-                    <p class="feature-description">Mendukung 4 role pengguna: Admin, Dosen, PT, dan Siswa dengan fitur yang disesuaikan.</p>
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="feature-title">Multi Role</h3>
+                    <p class="feature-desc">Mendukung 4 role: Admin, Dosen, PT, dan Siswa dengan akses sesuai kebutuhan.</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-bell"></i></div>
                     <h3 class="feature-title">Notifikasi Real-time</h3>
-                    <p class="feature-description">Dapatkan notifikasi setiap ada logbook baru, review, atau perubahan status yang memerlukan perhatian.</p>
+                    <p class="feature-desc">Dapatkan notifikasi setiap ada logbook baru, review, atau perubahan status.</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                     <h3 class="feature-title">Rekap & Analisis</h3>
-                    <p class="feature-description">Lihat statistik dan rekap data PKL dalam bentuk grafik yang informatif untuk monitoring.</p>
+                    <p class="feature-desc">Lihat statistik dan rekap data PKL dalam bentuk grafik yang informatif.</p>
                 </div>
             </div>
         </div>
@@ -665,177 +551,218 @@
 </section>
 
 <!-- Stats Section -->
-<section class="stats-section">
-    <div class="container">
+<section class="container">
+    <div class="stats-section" data-aos="zoom-in">
         <div class="row">
-            <div class="col-md-3 col-6 mb-4" data-aos="zoom-in">
-                <div class="stat-card">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Mahasiswa Aktif</div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="5000">0</div>
+                    <div class="stat-label">Pengguna Aktif</div>
                 </div>
             </div>
-            <div class="col-md-3 col-6 mb-4" data-aos="zoom-in" data-aos-delay="100">
-                <div class="stat-card">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Dosen</div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="10000">0</div>
+                    <div class="stat-label">Logbook Tercatat</div>
                 </div>
             </div>
-            <div class="col-md-3 col-6 mb-4" data-aos="zoom-in" data-aos-delay="200">
-                <div class="stat-card">
-                    <div class="stat-number">100+</div>
-                    <div class="stat-label">Perusahaan</div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="98">0</div>
+                    <div class="stat-label">Kepuasan</div>
                 </div>
             </div>
-            <div class="col-md-3 col-6 mb-4" data-aos="zoom-in" data-aos-delay="300">
-                <div class="stat-card">
-                    <div class="stat-number">1000+</div>
-                    <div class="stat-label">Logbook</div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="247">24/7</div>
+                    <div class="stat-label">Dukungan</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- About Section -->
-<section class="about-section" id="about">
+<!-- How It Works -->
+<section id="how-it-works" class="py-5">
     <div class="container">
-        <div class="text-center mb-5" data-aos="fade-up">
-            <h2 class="section-title">Tentang Sistem</h2>
-            <p class="section-subtitle">Solusi lengkap untuk monitoring PKL</p>
-        </div>
-        <div class="row">
-            <div class="col-lg-6" data-aos="fade-right">
-                <div class="about-card">
-                    <h3 class="mb-4">Kenapa Memilih Sistem Kami?</h3>
-                    <p class="text-muted mb-4">Sistem Monitoring PKL dikembangkan untuk memudahkan pengelolaan Praktek Kerja Lapangan di lingkungan pendidikan. Dengan sistem ini, semua proses mulai dari pendaftaran, pelaksanaan, hingga penilaian dapat terintegrasi dengan baik.</p>
-                    
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-check-circle text-success fa-2x me-3"></i>
-                        <div>
-                            <h5>Real-time Monitoring</h5>
-                            <p class="text-muted">Pantau kegiatan PKL secara real-time</p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-check-circle text-success fa-2x me-3"></i>
-                        <div>
-                            <h5>Approval 2 Level</h5>
-                            <p class="text-muted">Dari dosen dan PT untuk validasi</p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-3">
-                        <i class="fas fa-check-circle text-success fa-2x me-3"></i>
-                        <div>
-                            <h5>Export Data</h5>
-                            <p class="text-muted">CSV, PDF, dan format lainnya</p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex">
-                        <i class="fas fa-check-circle text-success fa-2x me-3"></i>
-                        <div>
-                            <h5>Notifikasi Otomatis</h5>
-                            <p class="text-muted">Update status via notifikasi</p>
-                        </div>
-                    </div>
+        <h2 class="section-title" data-aos="fade-up">Cara Kerja</h2>
+        <p class="section-subtitle" data-aos="fade-up">Langkah mudah menggunakan SISFO PKL</p>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Registrasi Akun</h4>
+                    <p class="step-desc">Daftar sebagai mahasiswa, dosen, atau perusahaan sesuai peran Anda.</p>
                 </div>
             </div>
-            <div class="col-lg-6" data-aos="fade-left">
-                <div class="about-card">
-                    <h3 class="mb-4">Cara Penggunaan</h3>
-                    
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h4>1. Register Akun</h4>
-                                <p>Daftar sebagai siswa, dosen, atau PT sesuai role Anda</p>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h4>2. Bergabung Kelompok</h4>
-                                <p>Admin akan menempatkan Anda dalam kelompok PKL</p>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h4>3. Isi Logbook</h4>
-                                <p>Catat kegiatan PKL Anda setiap hari</p>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h4>4. Upload Laporan</h4>
-                                <p>Upload laporan PKL untuk direview dosen</p>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h4>5. Lihat Nilai</h4>
-                                <p>Pantau nilai dari dosen dan PT</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Bergabung Kelompok</h4>
+                    <p class="step-desc">Admin akan menempatkan Anda ke dalam kelompok PKL yang sesuai.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Isi Logbook</h4>
+                    <p class="step-desc">Catat kegiatan harian dan upload dokumentasi kegiatan.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Upload Laporan</h4>
+                    <p class="step-desc">Unggah laporan PKL untuk direview oleh dosen.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h4 class="step-title">Review & Penilaian</h4>
+                    <p class="step-desc">Dosen dan PT memberikan penilaian dan review.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h4 class="step-title">Lihat Hasil</h4>
+                    <p class="step-desc">Mahasiswa bisa melihat nilai dan rekap akhir PKL.</p>
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Apa Kata Mereka?</h2>
+        <p class="section-subtitle" data-aos="fade-up">Testimoni dari pengguna kami</p>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h5 class="testimonial-name">Dr. Ahmad Fauzi</h5>
+                            <p class="testimonial-role">Dosen Pembimbing</p>
+                        </div>
+                    </div>
+                    <div class="rating mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Sistem ini sangat membantu dalam memantau kemajuan PKL mahasiswa. Approval logbook dan laporan jadi lebih terstruktur."</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h5 class="testimonial-name">Siti Nurhaliza</h5>
+                            <p class="testimonial-role">Mahasiswa</p>
+                        </div>
+                    </div>
+                    <div class="rating mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Mengisi logbook jadi lebih mudah dan rapi. Fitur notifikasi membantu saya tahu status review."</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h5 class="testimonial-name">Budi Santoso</h5>
+                            <p class="testimonial-role">HRD PT Maju Jaya</p>
+                        </div>
+                    </div>
+                    <div class="rating mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Memudahkan kami menilai kinerja mahasiswa magang. Rekap nilai dan laporan sangat lengkap."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="py-5">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Pertanyaan Umum</h2>
+        <p class="section-subtitle" data-aos="fade-up">Yang sering ditanyakan pengguna</p>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="faq-item" data-aos="fade-up">
+                    <div class="faq-question">
+                        <span>Apakah sistem ini gratis?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Ya, untuk penggunaan dasar. Tersedia paket premium untuk fitur lanjutan dengan harga terjangkau.</div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <span>Bagaimana cara mendapatkan akun?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Anda bisa mendaftar langsung melalui halaman register. Admin akan memverifikasi dan mengaktifkan akun Anda.</div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <span>Apakah data aman?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Data dienkripsi dan disimpan di server dengan keamanan tinggi. Kami menjaga kerahasiaan data Anda.</div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        <span>Bisa diakses dari HP?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Tentu, platform kami responsif dan bisa diakses dari berbagai perangkat, termasuk smartphone.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="container my-5">
+    <div class="cta-section" data-aos="zoom-in">
+        <h2 class="cta-title">Siap Mengelola PKL Lebih Efisien?</h2>
+        <p class="mb-4">Daftar sekarang dan rasakan kemudahan monitoring PKL.</p>
+        <a href="{{ route('register') }}" class="cta-button">Daftar Sekarang <i class="fas fa-arrow-right ms-2"></i></a>
     </div>
 </section>
 
 <!-- Contact Section -->
-<section class="contact-section" id="contact">
+<section id="contact" class="py-5">
     <div class="container">
-        <div class="text-center text-white mb-5" data-aos="fade-up">
-            <h2 class="section-title text-white">Hubungi Kami</h2>
-            <p class="section-subtitle text-white-50">Ada pertanyaan? Kami siap membantu</p>
-        </div>
+        <h2 class="section-title" data-aos="fade-up">Hubungi Kami</h2>
+        <p class="section-subtitle" data-aos="fade-up">Ada pertanyaan? Tim kami siap membantu</p>
         <div class="row g-4">
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
+                <div class="feature-card text-center">
+                    <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
                     <h5>Alamat Kantor</h5>
-                    <p>Jl. Contoh No. 123<br>Kota Contoh, 12345</p>
+                    <p class="text-muted">Jl. Teknologi No. 123, Jakarta Selatan</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
+                <div class="feature-card text-center">
+                    <i class="fas fa-phone-alt fa-2x text-primary mb-3"></i>
                     <h5>Telepon</h5>
-                    <p>(021) 1234-5678<br>0812-3456-7890</p>
+                    <p class="text-muted">(021) 1234-5678<br>0812-3456-7890</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
+                <div class="feature-card text-center">
+                    <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
                     <h5>Email</h5>
-                    <p>info@monitoringpkl.ac.id<br>support@monitoringpkl.ac.id</p>
+                    <p class="text-muted">info@sisfo-pkl.id<br>support@sisfo-pkl.id</p>
                 </div>
             </div>
         </div>
@@ -847,9 +774,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 mb-4">
-                <h5><i class="fas fa-graduation-cap me-2"></i>SISFO PKL</h5>
-                <p class="text-white-50">Sistem Monitoring Praktek Kerja Lapangan terintegrasi untuk memudahkan pengelolaan dan monitoring kegiatan PKL.</p>
-                <div class="social-links">
+                <h5 class="text-white mb-3"><a class="navbar-brand" href="{{ route('home') }}">
+    <img src="https://c.top4top.io/p_3749c8ad71.png" alt="Logo SISFO PKL" style="height: 32px; margin-right: 8px; vertical-align: middle;">
+</a> SISFO PKL</h5>
+                <p>Platform monitoring PKL terintegrasi untuk pendidikan vokasi dan magang.</p>
+                <div class="social-icons mt-3">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
@@ -857,38 +786,35 @@
                 </div>
             </div>
             <div class="col-md-2 mb-4">
-                <h5>Menu</h5>
-                <ul class="footer-links">
-                    <li><a href="#home">Home</a></li>
+                <h6 class="text-white mb-3">Tautan</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#home">Beranda</a></li>
                     <li><a href="#features">Fitur</a></li>
-                    <li><a href="#about">Tentang</a></li>
+                    <li><a href="#how-it-works">Cara Kerja</a></li>
                     <li><a href="#contact">Kontak</a></li>
                 </ul>
             </div>
             <div class="col-md-3 mb-4">
-                <h5>Link Cepat</h5>
-                <ul class="footer-links">
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Panduan</a></li>
+                <h6 class="text-white mb-3">Sumber Daya</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">Pusat Bantuan</a></li>
+                    <li><a href="#">Panduan Pengguna</a></li>
+                    <li><a href="#">Kebijakan Privasi</a></li>
+                    <li><a href="#">Syarat & Ketentuan</a></li>
                 </ul>
             </div>
             <div class="col-md-3 mb-4">
-                <h5>Download App</h5>
-                <p class="text-white-50">Akses lebih mudah dengan mobile app</p>
-                <div class="d-flex">
-                    <a href="#" class="me-2">
-                        <img src="https://cdn-icons-png.flaticon.com/512/888/888857.png" alt="Google Play" style="height: 40px;">
-                    </a>
-                    <a href="#">
-                        <img src="https://cdn-icons-png.flaticon.com/512/888/888841.png" alt="App Store" style="height: 40px;">
-                    </a>
+                <h6 class="text-white mb-3">Newsletter</h6>
+                <p>Dapatkan update fitur terbaru.</p>
+                <div class="input-group">
+                    <input type="email" class="form-control bg-dark text-white border-secondary" placeholder="Email Anda">
+                    <button class="btn btn-primary" type="button">Langganan</button>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p class="mb-0">&copy; {{ date('Y') }} Sistem Monitoring PKL. All rights reserved.</p>
+        <hr class="my-4 bg-secondary">
+        <div class="text-center">
+            <p class="mb-0">&copy; {{ date('Y') }} SISFO PKL. All rights reserved.</p>
         </div>
     </div>
 </footer>
@@ -897,34 +823,63 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    // Initialize AOS
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
-    });
-    
+    AOS.init({ duration: 800, once: true });
+
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
-        const navbar = document.getElementById('mainNav');
+        const navbar = document.getElementById('navbar');
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
     });
-    
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+        });
+    });
+
+    // Counter animation
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 200;
+    const observerOptions = { threshold: 0.5, rootMargin: '0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const updateCount = () => {
+                    const target = parseInt(counter.getAttribute('data-count'));
+                    const count = parseInt(counter.innerText);
+                    const increment = target / speed;
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + increment);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+                observer.unobserve(counter);
+            }
+        });
+    }, observerOptions);
+    counters.forEach(counter => observer.observe(counter));
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            answer.classList.toggle('show');
+            const icon = question.querySelector('i');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
         });
     });
 </script>

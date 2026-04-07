@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register - Sistem Monitoring PKL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - SISFO PKL</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Bootstrap 5 -->
@@ -18,199 +18,120 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+        }
+        
         * {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        /* Background Shapes */
-        .shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            left: -100px;
-        }
-        
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            bottom: -50px;
-            right: -50px;
-        }
-        
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            bottom: 50px;
-            left: 50px;
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        .shape-4 {
-            width: 100px;
-            height: 100px;
-            top: 50%;
-            right: 10%;
-            background: rgba(255, 255, 255, 0.05);
         }
         
         /* Register Container */
         .register-container {
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
             z-index: 1;
             position: relative;
+            margin: 40px auto;
         }
         
         /* Register Card */
         .register-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: var(--white);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
             overflow: hidden;
-            animation: slideUp 0.6s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .register-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.2);
         }
         
         /* Header */
         .register-header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            padding: 30px 30px;
+            background: var(--white);
+            padding: 2rem 2rem 1rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .register-header:before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .register-header .logo {
-            width: 70px;
-            height: 70px;
-            background: white;
-            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
         }
         
-        .register-header .logo i {
-            font-size: 35px;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .register-header .logo img {
+            width: 100%;
+            height: auto;
         }
         
         .register-header h2 {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 5px;
-            position: relative;
-            z-index: 1;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
         }
         
         .register-header p {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--gray);
+            font-size: 0.95rem;
             margin-bottom: 0;
-            position: relative;
-            z-index: 1;
         }
         
         /* Body */
         .register-body {
-            padding: 35px 30px;
+            padding: 2rem;
         }
         
         /* Alert Messages */
         .alert-custom {
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 25px;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            animation: slideDown 0.4s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .alert-custom i {
-            font-size: 20px;
-            margin-right: 10px;
+            gap: 0.75rem;
+            font-size: 0.9rem;
         }
         
         .alert-danger {
-            background: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid #dc3545;
-            color: #dc3545;
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
         }
         
         /* Form Groups */
         .form-group {
-            margin-bottom: 20px;
-            position: relative;
+            margin-bottom: 1.5rem;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #333;
+            color: var(--dark);
             font-size: 0.9rem;
-            letter-spacing: 0.5px;
         }
         
         .input-group {
@@ -221,199 +142,62 @@
         
         .input-icon {
             position: absolute;
-            left: 15px;
-            color: #999;
-            z-index: 1;
-            transition: all 0.3s ease;
+            left: 1rem;
+            color: var(--gray);
+            z-index: 2;
+            font-size: 1rem;
+            pointer-events: none;
         }
         
         .form-control {
             width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: white;
+            transition: all 0.2s;
+            background: var(--white);
         }
         
         .form-control:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
             outline: none;
         }
         
-        .form-control:focus + .input-icon {
-            color: #28a745;
-        }
-        
         .form-control.is-invalid {
-            border-color: #dc3545;
-        }
-        
-        .form-control.is-invalid:focus {
-            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+            border-color: #ef4444;
         }
         
         .password-toggle {
             position: absolute;
-            right: 15px;
-            color: #999;
+            right: 1rem;
+            color: var(--gray);
             cursor: pointer;
-            transition: all 0.3s ease;
+            z-index: 2;
         }
         
         .password-toggle:hover {
-            color: #28a745;
+            color: var(--primary);
         }
         
-        /* Error Message */
         .error-message {
-            color: #dc3545;
+            color: #ef4444;
             font-size: 0.8rem;
-            margin-top: 5px;
+            margin-top: 0.5rem;
             display: flex;
             align-items: center;
-        }
-        
-        .error-message i {
-            margin-right: 5px;
-            font-size: 0.8rem;
-        }
-        
-        /* Terms Checkbox */
-        .terms-group {
-            margin: 25px 0;
-        }
-        
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            cursor: pointer;
-        }
-        
-        .terms-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: #28a745;
-        }
-        
-        .terms-text {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .terms-text a {
-            color: #28a745;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .terms-text a:hover {
-            color: #20c997;
-            text-decoration: underline;
-        }
-        
-        /* Register Button */
-        .btn-register {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-register:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
-        }
-        
-        .btn-register:hover:before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn-register:active {
-            transform: translateY(0);
-        }
-        
-        .btn-register i {
-            margin-right: 8px;
-            transition: transform 0.3s ease;
-        }
-        
-        .btn-register:hover i {
-            transform: translateX(5px);
-        }
-        
-        /* Login Link */
-        .login-section {
-            text-align: center;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px dashed #e1e5e9;
-        }
-        
-        .login-section p {
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .login-link {
-            display: inline-block;
-            padding: 10px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .login-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-        
-        .login-link i {
-            margin-right: 5px;
+            gap: 0.25rem;
         }
         
         /* Password Strength */
         .password-strength {
-            margin-top: 8px;
+            margin-top: 0.5rem;
         }
         
         .strength-bar {
             height: 4px;
-            background: #e1e5e9;
+            background: #e2e8f0;
             border-radius: 2px;
             overflow: hidden;
         }
@@ -421,19 +205,81 @@
         .strength-bar-fill {
             height: 100%;
             width: 0;
-            transition: width 0.3s ease, background-color 0.3s ease;
+            transition: width 0.3s ease, background 0.3s ease;
         }
         
         .strength-text {
-            font-size: 0.8rem;
-            margin-top: 5px;
-            color: #666;
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            color: var(--gray);
         }
         
-        /* Loading State */
+        /* Terms Checkbox */
+        .terms-group {
+            margin: 1.5rem 0;
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .terms-checkbox input {
+            width: 1rem;
+            height: 1rem;
+            margin-top: 0.2rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .terms-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.4;
+        }
+        
+        .terms-text a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .terms-text a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Register Button */
+        .btn-register {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary);
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-register:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(79,70,229,0.4);
+        }
+        
+        .btn-register:active {
+            transform: translateY(0);
+        }
+        
         .btn-register.loading {
-            pointer-events: none;
             opacity: 0.8;
+            pointer-events: none;
         }
         
         .btn-register.loading i {
@@ -445,110 +291,74 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Role Selection (Optional - jika ingin menambah field role) */
-        .role-selection {
-            margin-bottom: 20px;
+        /* Login Link */
+        .login-section {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
         }
         
-        .role-label {
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .role-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .role-option {
-            flex: 1;
-            min-width: 100px;
-        }
-        
-        .role-option input[type="radio"] {
-            display: none;
-        }
-        
-        .role-option label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 10px;
-            background: #f8f9fa;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .role-option input[type="radio"]:checked + label {
-            border-color: #28a745;
-            background: rgba(40, 167, 69, 0.05);
-        }
-        
-        .role-option label i {
-            font-size: 24px;
-            margin-bottom: 8px;
-            color: #666;
-        }
-        
-        .role-option input[type="radio"]:checked + label i {
-            color: #28a745;
-        }
-        
-        .role-option label span {
+        .login-section p {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
             font-size: 0.9rem;
-            font-weight: 500;
-            color: #666;
         }
         
-        .role-option input[type="radio"]:checked + label span {
-            color: #28a745;
+        .login-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .login-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79,70,229,0.2);
         }
         
         /* Responsive */
         @media (max-width: 480px) {
             .register-body {
-                padding: 25px 20px;
+                padding: 1.5rem;
             }
-            
-            .role-options {
-                flex-direction: column;
+            .register-header {
+                padding: 1.5rem;
             }
-            
-            .role-option {
-                min-width: auto;
+            .register-header h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Background Shapes -->
-<div class="shape shape-1"></div>
-<div class="shape shape-2"></div>
-<div class="shape shape-3"></div>
-<div class="shape shape-4"></div>
-
-<!-- Register Container -->
 <div class="register-container">
     <div class="register-card" data-aos="fade-up">
         <!-- Header -->
         <div class="register-header">
             <div class="logo">
-                <i class="fas fa-user-plus"></i>
+                <!-- Ganti dengan logo PNG jika ada -->
+                <img src="https://c.top4top.io/p_3749c8ad71.png" alt="SISFO PKL Logo" style="width: 60px;">
             </div>
             <h2>Buat Akun Baru</h2>
-            <p>Bergabung dengan Sistem Monitoring PKL</p>
+            <p>Bergabung dengan SISFO PKL</p>
         </div>
         
         <!-- Body -->
         <div class="register-body">
             <!-- Validation Errors -->
             @if ($errors->any())
-                <div class="alert-custom alert-danger" data-aos="fade-in">
+                <div class="alert-custom alert-danger">
                     <i class="fas fa-exclamation-circle"></i>
                     <div>
                         @foreach ($errors->all() as $error)
@@ -573,7 +383,7 @@
                             name="name" 
                             class="form-control @error('name') is-invalid @enderror" 
                             value="{{ old('name') }}" 
-                            placeholder="Masukkan nama lengkap Anda"
+                            placeholder="Masukkan nama lengkap"
                             required 
                             autofocus 
                             autocomplete="name"
@@ -581,8 +391,7 @@
                     </div>
                     @error('name')
                         <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            {{ $message }}
+                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
                         </div>
                     @enderror
                 </div>
@@ -598,48 +407,17 @@
                             name="email" 
                             class="form-control @error('email') is-invalid @enderror" 
                             value="{{ old('email') }}" 
-                            placeholder="Masukkan email Anda"
+                            placeholder="contoh@email.com"
                             required 
                             autocomplete="username"
                         >
                     </div>
                     @error('email')
                         <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            {{ $message }}
+                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
                         </div>
                     @enderror
                 </div>
-
-                <!-- Optional: Role Selection (uncomment jika ingin menambah field role) -->
-                <!-- 
-                <div class="role-selection" data-aos="fade-up" data-aos-delay="250">
-                    <div class="role-label">Daftar sebagai</div>
-                    <div class="role-options">
-                        <div class="role-option">
-                            <input type="radio" name="role" id="role_siswa" value="siswa" checked>
-                            <label for="role_siswa">
-                                <i class="fas fa-user-graduate"></i>
-                                <span>Siswa</span>
-                            </label>
-                        </div>
-                        <div class="role-option">
-                            <input type="radio" name="role" id="role_dosen" value="dosen">
-                            <label for="role_dosen">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                <span>Dosen</span>
-                            </label>
-                        </div>
-                        <div class="role-option">
-                            <input type="radio" name="role" id="role_pt" value="pt">
-                            <label for="role_pt">
-                                <i class="fas fa-building"></i>
-                                <span>PT</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                -->
 
                 <!-- Password Field -->
                 <div class="form-group" data-aos="fade-up" data-aos-delay="300">
@@ -659,13 +437,12 @@
                     </div>
                     @error('password')
                         <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            {{ $message }}
+                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
                         </div>
                     @enderror
                     
                     <!-- Password Strength Indicator -->
-                    <div class="password-strength" id="passwordStrength">
+                    <div class="password-strength">
                         <div class="strength-bar">
                             <div class="strength-bar-fill" id="strengthBarFill"></div>
                         </div>
@@ -690,14 +467,13 @@
                         <i class="fas fa-eye password-toggle" id="toggleConfirmPassword"></i>
                     </div>
                     <div class="error-message" id="passwordMatchError" style="display: none;">
-                        <i class="fas fa-exclamation-circle"></i>
-                        Password tidak cocok
+                        <i class="fas fa-exclamation-circle"></i> Password tidak cocok
                     </div>
                 </div>
 
-                <!-- Terms and Privacy Policy -->
+                <!-- Terms and Privacy Policy (Jetstream) -->
                 @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                    <div class="terms-group" data-aos="fade-up" data-aos-delay="500">
+                    <div class="terms-group">
                         <label class="terms-checkbox">
                             <input type="checkbox" name="terms" id="terms" required>
                             <span class="terms-text">
@@ -711,18 +487,17 @@
                 @endif
 
                 <!-- Register Button -->
-                <button type="submit" class="btn-register" id="registerButton" data-aos="fade-up" data-aos-delay="600">
+                <button type="submit" class="btn-register" id="registerButton">
                     <i class="fas fa-user-plus"></i>
                     <span>Daftar Sekarang</span>
                 </button>
             </form>
 
             <!-- Login Link -->
-            <div class="login-section" data-aos="fade-up" data-aos-delay="700">
+            <div class="login-section">
                 <p>Sudah punya akun?</p>
                 <a href="{{ route('login') }}" class="login-link">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login di sini
+                    <i class="fas fa-sign-in-alt"></i> Masuk
                 </a>
             </div>
         </div>
@@ -733,11 +508,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true
-    });
+    AOS.init({ duration: 800, once: true });
 
     // Password Toggle
     const togglePassword = document.getElementById('togglePassword');
@@ -773,29 +544,26 @@
         if (val.match(/[0-9]+/)) strength += 25;
         if (val.match(/[$@#&!]+/)) strength += 25;
         
-        // Cap at 100
         strength = Math.min(strength, 100);
         
-        // Update bar
         strengthBarFill.style.width = strength + '%';
         
-        // Update color and text
         if (strength < 25) {
-            strengthBarFill.style.backgroundColor = '#dc3545';
+            strengthBarFill.style.backgroundColor = '#ef4444';
             strengthText.textContent = 'Password terlalu lemah';
-            strengthText.style.color = '#dc3545';
+            strengthText.style.color = '#ef4444';
         } else if (strength < 50) {
-            strengthBarFill.style.backgroundColor = '#ffc107';
+            strengthBarFill.style.backgroundColor = '#f59e0b';
             strengthText.textContent = 'Password lemah';
-            strengthText.style.color = '#ffc107';
+            strengthText.style.color = '#f59e0b';
         } else if (strength < 75) {
-            strengthBarFill.style.backgroundColor = '#17a2b8';
+            strengthBarFill.style.backgroundColor = '#06b6d4';
             strengthText.textContent = 'Password sedang';
-            strengthText.style.color = '#17a2b8';
+            strengthText.style.color = '#06b6d4';
         } else {
-            strengthBarFill.style.backgroundColor = '#28a745';
+            strengthBarFill.style.backgroundColor = '#10b981';
             strengthText.textContent = 'Password kuat';
-            strengthText.style.color = '#28a745';
+            strengthText.style.color = '#10b981';
         }
     });
 
@@ -820,7 +588,6 @@
     const registerButton = document.getElementById('registerButton');
 
     registerForm.addEventListener('submit', function(e) {
-        // Check if passwords match
         if (password.value !== confirmPassword.value) {
             e.preventDefault();
             passwordMatchError.style.display = 'flex';
@@ -831,34 +598,6 @@
         registerButton.classList.add('loading');
         registerButton.innerHTML = '<i class="fas fa-spinner"></i><span>Memproses...</span>';
     });
-
-    // Floating Label Effect
-    const inputs = document.querySelectorAll('.form-control');
-    
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.querySelector('.input-icon').style.color = '#28a745';
-        });
-        
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.parentElement.querySelector('.input-icon').style.color = '#999';
-            }
-        });
-    });
-
-    // Terms Checkbox Effect
-    const termsCheckbox = document.getElementById('terms');
-    if (termsCheckbox) {
-        termsCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                this.parentElement.style.color = '#28a745';
-            } else {
-                this.parentElement.style.color = '';
-            }
-        });
-    }
 </script>
-
 </body>
 </html>
