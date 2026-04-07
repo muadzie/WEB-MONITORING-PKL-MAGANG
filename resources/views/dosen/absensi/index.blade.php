@@ -6,8 +6,16 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Absensi Siswa</h3>
+    <h3 class="card-title">Absensi Siswa Bimbingan</h3>
+    <div class="card-tools">
+        <a href="{{ route('dosen.absensi.export-excel') }}" class="btn btn-success btn-sm">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </a>
+        <a href="{{ route('dosen.absensi.rekap') }}" class="btn btn-info btn-sm">
+            <i class="fas fa-chart-bar"></i> Rekap Absensi
+        </a>
     </div>
+</div>
     <div class="card-body">
         <form method="GET" action="{{ route('dosen.absensi.siswa') }}" class="form-inline mb-3">
             <div class="form-group mr-2">

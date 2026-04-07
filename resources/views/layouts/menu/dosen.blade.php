@@ -66,3 +66,48 @@
         <p>Penilaian</p>
     </a>
 </li>
+
+
+<!-- ========== MENU ABSENSI (DROPDOWN) ========== -->
+<li class="nav-item has-treeview {{ request()->routeIs('dosen.absensi*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-fingerprint"></i>
+        <p>
+            Absensi & Rekap
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('dosen.absensi.siswa') }}" class="nav-link {{ request()->routeIs('dosen.absensi.siswa') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Absen Siswa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dosen.absensi.rekap') }}" class="nav-link {{ request()->routeIs('dosen.absensi.rekap') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Rekap Absensi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dosen.absensi.export-excel') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p><i class="fas fa-file-excel text-success"></i> Download detail</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dosen.absensi.export-rekap-siswa') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p><i class="fas fa-chart-bar text-info"></i>Rekap per Siswa</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('dosen.ijin-sakit.index') }}" class="nav-link {{ request()->routeIs('dosen.ijin-sakit*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-file-medical"></i>
+        <p>Izin / Sakit</p>
+    </a>
+</li>

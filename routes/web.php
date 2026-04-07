@@ -71,10 +71,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         
         // ========== EXPORT ROUTES ==========
         Route::prefix('export')->name('export.')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\ExportController::class, 'index'])->name('index');
-            Route::get('/kelompok', [App\Http\Controllers\Admin\ExportController::class, 'exportKelompok'])->name('kelompok');
-            Route::get('/nilai', [App\Http\Controllers\Admin\ExportController::class, 'exportNilai'])->name('nilai');
-            Route::get('/siswa', [App\Http\Controllers\Admin\ExportController::class, 'exportSiswa'])->name('siswa');
+        Route::get('/', [App\Http\Controllers\Admin\ExportController::class, 'index'])->name('index');
+        Route::get('/kelompok', [App\Http\Controllers\Admin\ExportController::class, 'exportKelompok'])->name('kelompok');
+        Route::get('/nilai', [App\Http\Controllers\Admin\ExportController::class, 'exportNilai'])->name('nilai');
+        Route::get('/siswa', [App\Http\Controllers\Admin\ExportController::class, 'exportSiswa'])->name('siswa');
         });
         
         // ========== LAPORAN ROUTES ==========
@@ -88,15 +88,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
         
         // ========== REKAP ROUTES ==========
-        Route::prefix('rekap')->name('rekap.')->group(function () {
-            Route::get('/siswa', [App\Http\Controllers\Admin\RekapController::class, 'siswa'])->name('siswa');
-            Route::get('/kelompok', [App\Http\Controllers\Admin\RekapController::class, 'kelompok'])->name('kelompok');
-            Route::get('/logbook', [App\Http\Controllers\Admin\RekapController::class, 'logbook'])->name('logbook');
-            Route::get('/nilai', [App\Http\Controllers\Admin\RekapController::class, 'nilai'])->name('nilai');
-            Route::get('/perusahaan', [App\Http\Controllers\Admin\RekapController::class, 'perusahaan'])->name('perusahaan');
-            Route::get('/tahunan', [App\Http\Controllers\Admin\RekapController::class, 'tahunan'])->name('tahunan');
-            Route::get('/export/{type}', [App\Http\Controllers\Admin\RekapController::class, 'export'])->name('export');
-        });
+        Route::get('/rekap/siswa-export', [App\Http\Controllers\Admin\ExportController::class, 'rekapSiswa'])->name('rekap.siswa-export');
+    Route::get('/rekap/kelompok-export', [App\Http\Controllers\Admin\ExportController::class, 'rekapKelompok'])->name('rekap.kelompok-export');
+    Route::get('/rekap/logbook-export', [App\Http\Controllers\Admin\ExportController::class, 'rekapLogbook'])->name('rekap.logbook-export');
+    Route::get('/rekap/perusahaan-export', [App\Http\Controllers\Admin\ExportController::class, 'rekapPerusahaan'])->name('rekap.perusahaan-export');
+    Route::get('/rekap/tahunan-export', [App\Http\Controllers\Admin\ExportController::class, 'rekapTahunan'])->name('rekap.tahunan-export');
         
         // Monitoring & Laporan (legacy)
         Route::get('/laporan-rekap', [App\Http\Controllers\Admin\LaporanController::class, 'rekap'])->name('laporan.rekap');
@@ -133,8 +129,9 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     Route::get('/absensi/siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'index'])->name('absensi.siswa');
     Route::get('/absensi/rekap', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'rekap'])->name('absensi.rekap');
     Route::get('/absensi/export-excel', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportExcel'])->name('absensi.export-excel');
+    Route::get('/absensi/export-rekap-siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportRekapSiswa'])->name('absensi.export-rekap-siswa');
     Route::post('/absensi/absen-siswa/{siswaId}', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'absenSiswa'])->name('absensi.absen-siswa');
-    
+
     // Izin Sakit
     Route::get('/ijin-sakit', [App\Http\Controllers\Dosen\IjinSakitController::class, 'index'])->name('ijin-sakit.index');
     Route::post('/ijin-sakit/{id}/approve', [App\Http\Controllers\Dosen\IjinSakitController::class, 'approve'])->name('ijin-sakit.approve');
