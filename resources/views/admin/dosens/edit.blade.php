@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Dosen')
-@section('page-title', 'Edit Data Dosen')
+@section('title', 'Edit Guru')
+@section('page-title', 'Edit Data Guru')
 
 @section('content')
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Form Edit Dosen</h3>
+                <h3 class="card-title">Form Edit Guru</h3>
             </div>
             <form action="{{ route('admin.dosens.update', $dosen->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nidn">NIDN <span class="text-danger">*</span></label>
+                                <label for="nidn">NISN <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('nidn') is-invalid @enderror" 
                                        id="nidn" name="nidn" value="{{ old('nidn', $dosen->nidn) }}" required>
                                 @error('nidn')
@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_dosen">Nama Dosen <span class="text-danger">*</span></label>
+                                <label for="nama_dosen">Nama Guru <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('nama_dosen') is-invalid @enderror" 
                                        id="nama_dosen" name="nama_dosen" value="{{ old('nama_dosen', $dosen->nama_dosen) }}" required>
                                 @error('nama_dosen')
@@ -148,6 +148,13 @@
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
+                 <div class="form-group">
+        <label for="foto">Foto Profil</label>
+        <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+        @if($dosen->foto)
+            <img src="{{ asset('storage/'.$dosen->foto) }}" class="mt-2" style="height: 50px;">
+        @endif
+    </div>
             </form>
         </div>
     </div>

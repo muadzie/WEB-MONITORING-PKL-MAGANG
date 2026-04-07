@@ -11,7 +11,7 @@
                 <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle"
                          src="{{ $user->foto ? asset('storage/'.$user->foto) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
-                         alt="User profile picture">
+                         alt="User profile picture" style="width: 80px; height: 80px; min-width: 80px; min-height: 80px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;  box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                 </div>
                 <h3 class="profile-username text-center">{{ $user->name }}</h3>
                 <p class="text-muted text-center">Siswa - {{ $user->nomor_induk ?? '-' }}</p>

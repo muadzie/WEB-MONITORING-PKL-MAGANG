@@ -14,7 +14,6 @@
                 @csrf
                 @method('PUT')
                 <div class="card-body">
-                    <!-- Form fields yang sudah ada -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -70,21 +69,27 @@
                             <!-- Peta -->
                             <div class="form-group">
                                 <label>Pilih Lokasi di Peta</label>
-                                <div id="map" style="height: 400px; width: 100%; border-radius: 10px;"></div>
+                                <div id="map" style="height: 400px; width: 100%; border-radius: 10px; z-index: 1;"></div>
                                 <small class="text-muted mt-2 d-block">
-                                    * Geser marker untuk menentukan titik lokasi yang lebih presisi.
+                                    * Geser marker untuk menentukan titik lokasi yang lebih presisi. 
+                                    Klik pada peta untuk memindahkan marker.
                                 </small>
                             </div>
 
                             <!-- Informasi Koordinat -->
                             <div class="alert alert-info mt-2" id="coord-info">
                                 <i class="fas fa-map-marker-alt"></i> 
-                                Koordinat: <span id="coord-display">{{ $perusahaan->latitude ? $perusahaan->latitude . ', ' . $perusahaan->longitude : 'Belum dipilih' }}</span>
+                                Koordinat: <span id="coord-display">
+                                    @if($perusahaan->latitude && $perusahaan->longitude)
+                                        {{ number_format($perusahaan->latitude, 6) }}, {{ number_format($perusahaan->longitude, 6) }}
+                                    @else
+                                        Belum dipilih
+                                    @endif
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Field lainnya (telepon, email, dll) -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -132,7 +137,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="deskripsi">Deskripsi Perusahaan</label>
                                 <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
@@ -142,10 +147,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="logo">Logo Perusahaan</label>
                                 <div class="custom-file">
@@ -156,8 +158,18 @@
                                 @error('logo')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
+                                <small class="text-muted">Format: JPG, PNG. Maks: 2MB</small>
                             </div>
+                            @if($perusahaan->logo)
+                                <div class="mt-2">
+                                    <label>Logo Saat Ini:</label><br>
+                                    <img src="{{ asset('storage/'.$perusahaan->logo) }}" class="img-thumbnail" style="max-height: 80px;">
+                                </div>
+                            @endif
                         </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="is_active">Status</label>
@@ -171,17 +183,8 @@
                             </div>
                         </div>
                     </div>
-
-                    @if($perusahaan->logo)
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Logo Saat Ini</label><br>
-                            <img src="{{ asset('storage/'.$perusahaan->logo) }}" class="img-thumbnail" style="max-height: 100px;">
-                        </div>
-                    </div>
-                    @endif
                 </div>
-                
+
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Update
@@ -199,7 +202,8 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    #map { height: 400px; }
+    #map { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
+    .custom-file-label::after { content: "Browse"; }
 </style>
 @endpush
 
@@ -234,6 +238,9 @@ function initMap() {
         updateCoordinates(e.latlng.lat, e.latlng.lng);
         reverseGeocode(e.latlng.lat, e.latlng.lng);
     });
+    
+    // Tampilkan informasi koordinat awal
+    updateCoordinatesDisplay(currentLat, currentLng);
 }
 
 // Update koordinat di hidden fields
@@ -242,6 +249,10 @@ function updateCoordinates(lat, lng) {
     currentLng = lng;
     document.getElementById('latitude').value = lat;
     document.getElementById('longitude').value = lng;
+    updateCoordinatesDisplay(lat, lng);
+}
+
+function updateCoordinatesDisplay(lat, lng) {
     document.getElementById('coord-display').innerHTML = lat.toFixed(6) + ', ' + lng.toFixed(6);
 }
 
@@ -297,7 +308,13 @@ document.getElementById('alamat').addEventListener('keypress', function(e) {
     }
 });
 
-// Jalankan inisialisasi
-initMap();
+// File input preview
+$('.custom-file-input').on('change', function() {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+});
+
+// Jalankan inisialisasi peta setelah halaman siap
+document.addEventListener('DOMContentLoaded', initMap);
 </script>
 @endpush

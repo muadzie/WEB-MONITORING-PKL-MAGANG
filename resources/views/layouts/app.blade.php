@@ -12,6 +12,25 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
     @stack('styles')
+    @push('styles')
+<style>
+    
+
+    .profile-user-img {
+        width: 120px !important;
+        height: 120px !important;
+        min-width: 120px !important;
+        min-height: 120px !important;
+        max-width: 120px !important;
+        max-height: 120px !important;
+        object-fit: cover !important;
+        border-radius: 50% !important;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1) !important;
+        display: block !important;
+        margin: 0 auto !important;
+    }
+</style>
+@endpush
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -85,7 +104,7 @@
            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
     <div class="image">
         @if(Auth::user()->foto)
-            <img src="{{ asset('storage/'.Auth::user()->foto) }}" class="img-circle elevation-2" alt="User Image">
+            <img src="{{ asset('storage/'.Auth::user()->foto) }}" class="profile-user-img img-fluid img-circle" alt="User Image" style="width: 50px; height: 50px; min-width: 50px; min-height: 50px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;  box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         @else
             <div class="default-avatar img-circle elevation-2 d-flex align-items-center justify-content-center" 
                  style="width: 34px; height: 34px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 18px; font-weight: bold;">

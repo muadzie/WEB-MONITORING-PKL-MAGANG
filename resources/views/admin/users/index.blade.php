@@ -22,8 +22,8 @@
                             <select name="role" class="form-control">
                                 <option value="">Semua Role</option>
                                 <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="dosen" {{ request('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
-                                <option value="pt" {{ request('role') == 'pt' ? 'selected' : '' }}>PT</option>
+                                <option value="dosen" {{ request('role') == 'dosen' ? 'selected' : '' }}>Guru</option>
+                                <option value="pt" {{ request('role') == 'pt' ? 'selected' : '' }}>Perusahaan</option>
                                 <option value="siswa" {{ request('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
                             </select>
                         </div>
@@ -68,11 +68,20 @@
                         </thead>
                         <tbody>
                             @forelse($users as $index => $user)
+                            @php
+                                // Ambil foto dari user, jika dosen dan tidak punya foto, ambil dari relasi dosen
+                                $fotoUser = $user->foto;
+                                if ($user->role == 'dosen' && !$fotoUser && $user->dosen) {
+                                    $fotoUser = $user->dosen->foto;
+                                }
+                            @endphp
                             <tr>
                                 <td>{{ $users->firstItem() + $index }}</td>
                                 <td>
-                                    <img src="{{ $user->foto ? asset('storage/'.$user->foto) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}" 
-                                         class="img-circle img-size-32" alt="User Image">
+                                    <img class="profile-user-img img-fluid"
+                                         src="{{ $fotoUser ? asset('storage/'.$fotoUser) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
+                                         alt="{{ $user->name }}"
+                                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                                 </td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->nomor_induk ?? '-' }}</td>
@@ -81,9 +90,9 @@
                                     @if($user->role == 'admin')
                                         <span class="badge badge-danger">Admin</span>
                                     @elseif($user->role == 'dosen')
-                                        <span class="badge badge-success">Dosen</span>
+                                        <span class="badge badge-success">Guru</span>
                                     @elseif($user->role == 'pt')
-                                        <span class="badge badge-warning">PT</span>
+                                        <span class="badge badge-warning">Perusahaan</span>
                                     @else
                                         <span class="badge badge-info">Siswa</span>
                                     @endif
@@ -96,36 +105,42 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @if($user->is_active)
-                                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Nonaktifkan user ini?')">
-                                                <i class="fas fa-ban"></i>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-primary" title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @if($user->is_active)
+                                                <button type="submit" class="btn btn-warning" title="Nonaktifkan" onclick="return confirm('Nonaktifkan user ini?')">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            @else
+                                                <button type="submit" class="btn btn-success" title="Aktifkan" onclick="return confirm('Aktifkan user ini?')">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            @endif
+                                        </form>
+                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" title="Hapus" onclick="return confirm('Hapus user ini? Semua data terkait akan dihapus.')">
+                                                <i class="fas fa-trash"></i>
                                             </button>
-                                        @else
-                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Aktifkan user ini?')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        @endif
-                                    </form>
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus user ini?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data</td>
+                                <td colspan="8" class="text-center">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-info-circle"></i> Tidak ada data user
+                                    </div>
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -140,3 +155,18 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .btn-group-sm .btn {
+        margin: 0 2px;
+        padding: 5px 10px;
+    }
+    .btn-group-sm .btn i {
+        font-size: 12px;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+</style>
+@endpush

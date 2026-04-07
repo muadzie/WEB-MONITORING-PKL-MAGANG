@@ -240,4 +240,14 @@ class UserController extends Controller
         $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->back()->with('success', "User berhasil {$status}.");
     }
+
+    /**
+ * Display the specified user.
+ */
+public function show(User $user)
+{
+    $user->load(['dosen', 'perusahaan', 'kelompokSiswa.kelompok']);
+    
+    return view('admin.users.show', compact('user'));
+}
 }

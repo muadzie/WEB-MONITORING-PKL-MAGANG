@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Dosen')
-@section('page-title', 'Tambah Dosen Baru')
+@section('title', 'Tambah Guru')
+@section('page-title', 'Tambah Guru Baru')
 
 @section('content')
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Form Tambah Dosen</h3>
+                <h3 class="card-title">Form Tambah Guru</h3>
             </div>
             <form action="{{ route('admin.dosens.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nidn">NIDN <span class="text-danger">*</span></label>
+                                <label for="nidn">NISN<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('nidn') is-invalid @enderror" 
                                        id="nidn" name="nidn" value="{{ old('nidn') }}" required>
                                 @error('nidn')
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_dosen">Nama Dosen <span class="text-danger">*</span></label>
+                                <label for="nama_dosen">Nama Guru <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('nama_dosen') is-invalid @enderror" 
                                        id="nama_dosen" name="nama_dosen" value="{{ old('nama_dosen') }}" required>
                                 @error('nama_dosen')

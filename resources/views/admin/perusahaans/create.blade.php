@@ -130,19 +130,6 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="alamat">Alamat <span class="text-danger">*</span></label>
-                                <textarea class="form-control @error('alamat') is-invalid @enderror" 
-                                          id="alamat_text" name="alamat" rows="3" required>{{ old('alamat') }}</textarea>
-                                @error('alamat')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="deskripsi">Deskripsi Perusahaan</label>
@@ -218,6 +205,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     #map { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
+    .custom-file-label::after { content: "Browse"; }
 </style>
 @endpush
 
@@ -286,7 +274,6 @@ function reverseGeocode(lat, lng) {
         .then(data => {
             if (data.display_name) {
                 document.getElementById('alamat').value = data.display_name;
-                document.getElementById('alamat_text').value = data.display_name;
             }
         })
         .catch(error => console.log('Geocoding error:', error));

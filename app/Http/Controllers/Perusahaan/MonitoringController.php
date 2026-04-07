@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\KelompokPkl;
 use App\Models\Logbook;
 use App\Models\Laporan;
+use App\Models\Notifikasi;
 use App\Models\Perusahaan;
 use Illuminate\Support\Facades\Storage;
 
@@ -185,22 +186,23 @@ class MonitoringController extends Controller
     /**
      * Display pending logbooks.
      */
-    public function logbookPending()
-    {
-        $this->initPerusahaan();
-        
-        $perusahaanId = $this->perusahaan->id;
-        
-        $logbooks = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
-                    ->whereHas('kelompokSiswa.kelompok', function($q) use ($perusahaanId) {
-                        $q->where('perusahaan_id', $perusahaanId);
-                    })
-                    ->where('status', 'pending')
-                    ->orderBy('tanggal', 'asc')
-                    ->paginate(15);
-        
-        return view('pt.logbook.pending', compact('logbooks'));
-    }
+   public function logbookPending()
+{
+    $this->initPerusahaan();
+    
+    $perusahaanId = $this->perusahaan->id;
+    
+    // Ambil logbook yang approval_pt-nya masih 'pending'
+    $logbooks = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
+                ->whereHas('kelompokSiswa.kelompok', function($q) use ($perusahaanId) {
+                    $q->where('perusahaan_id', $perusahaanId);
+                })
+                ->where('approval_pt', 'pending')  // Gunakan string 'pending'
+                ->orderBy('tanggal', 'asc')
+                ->paginate(15);
+    
+    return view('pt.logbook.pending', compact('logbooks'));
+}
     
     /**
      * Review a logbook.
@@ -244,29 +246,49 @@ class MonitoringController extends Controller
     /**
      * Approve a logbook.
      */
-    public function approveLogbook(Request $request, Logbook $logbook)
-    {
-        $this->initPerusahaan();
-        
-        $perusahaanId = $this->perusahaan->id;
-        
-        if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
-            abort(403);
-        }
-        
-        $request->validate([
-            'catatan' => 'nullable|string',
-        ]);
-        
-        $logbook->update([
-            'status' => 'disetujui',
-            'catatan_pt' => $request->catatan,
-            'approved_by_pt' => Auth::id(),
-            'approved_at_pt' => now(),
-        ]);
-        
-        return redirect()->back()->with('success', 'Logbook berhasil disetujui.');
+/**
+ * Approve or reject a logbook by PT.
+ */
+public function approveLogbook(Request $request, Logbook $logbook)
+{
+    $this->initPerusahaan();
+    
+    $perusahaanId = $this->perusahaan->id;
+    
+    // Cek kepemilikan
+    if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        abort(403, 'Anda tidak memiliki akses ke logbook ini');
     }
+    
+    $request->validate([
+        'action' => 'required|in:approve,reject',
+        'catatan' => 'nullable|string',
+    ]);
+    
+    $status = $request->action === 'approve' ? 'disetujui' : 'ditolak';
+    
+    $logbook->update([
+        'approval_pt' => $status,
+        'catatan_pt' => $request->catatan,
+        'approved_by_pt' => Auth::id(),
+        'approved_at_pt' => now(),
+        // Update status utama jika sudah diapprove oleh kedua belah pihak
+        'status' => ($status === 'disetujui' && $logbook->approval_dosen === 'disetujui') ? 'disetujui' : 'pending',
+    ]);
+    
+    // Notifikasi ke siswa
+    Notifikasi::create([
+        'user_id' => $logbook->kelompokSiswa->siswa_id,
+        'judul' => 'Logbook ' . ucfirst($status) . ' oleh PT',
+        'pesan' => 'Logbook tanggal ' . $logbook->tanggal->format('d/m/Y') . ' telah ' . $status . ' oleh pembimbing PT.',
+        'tipe' => $request->action === 'approve' ? 'success' : 'danger',
+        'url' => route('siswa.logbook.show', $logbook->id),
+    ]);
+    
+    $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
+    return redirect()->route('pt.logbook.pending')
+        ->with('success', "Logbook berhasil {$message} oleh PT.");
+}
     
     /**
      * Reject a logbook.

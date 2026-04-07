@@ -15,7 +15,7 @@
 <li class="nav-item">
     <a href="{{ route('admin.dosens.index') }}" class="nav-link {{ request()->routeIs('admin.dosens*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-chalkboard-teacher"></i>
-        <p>Data Dosen</p>
+        <p>Data Guru</p>
     </a>
 </li>
 

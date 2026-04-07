@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Dosen')
-@section('page-title', 'Manajemen Dosen')
+@section('title', 'Manajemen Guru')
+@section('page-title', 'Manajemen Guru')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Dosen</h3>
+                <h3 class="card-title">Daftar Guru</h3>
                 <div class="card-tools">
                     <a href="{{ route('admin.dosens.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Tambah Dosen
+                        <i class="fas fa-plus"></i> Tambah Guru
                     </a>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                                 <th width="5%">No</th>
                                 <th width="8%">Foto</th>
                                 <th>NIDN</th>
-                                <th>Nama Dosen</th>
+                                <th>Nama Guru</th>
                                 <th>Jurusan</th>
                                 <th>Fakultas</th>
                                 <th>Email</th>
@@ -68,8 +68,10 @@
                             <tr>
                                 <td>{{ $dosens->firstItem() + $index }}</td>
                                 <td>
-                                    <img src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}" 
-                                         class="img-circle img-size-32" alt="Dosen Image">
+                                    <img class="profile-user-img img-fluid"
+     src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
+     alt="Dosen profile picture"
+     style="width: 80px; height: 80px; min-width: 80px; min-height: 80px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;  box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                                 </td>
                                 <td>{{ $dosen->nidn }}</td>
                                 <td>

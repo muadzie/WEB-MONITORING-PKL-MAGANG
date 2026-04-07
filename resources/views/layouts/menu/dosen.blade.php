@@ -29,12 +29,6 @@
     </a>
 </li>
 
-<li class="nav-item">
-    <a href="{{ route('dosen.absensi.siswa') }}" class="nav-link {{ request()->routeIs('dosen.absensi*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-fingerprint"></i>
-        <p>Absensi & Rekap</p>
-    </a>
-</li>
 
 <li class="nav-item">
     <a href="{{ route('dosen.ijin-sakit.index') }}" class="nav-link {{ request()->routeIs('dosen.ijin-sakit*') ? 'active' : '' }}">

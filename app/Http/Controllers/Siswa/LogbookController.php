@@ -76,74 +76,49 @@ public function create()
     /**
      * Store a newly created logbook in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'kegiatan' => 'required|string|max:255',
-            'deskripsi' => 'required|string|min:10',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required|after:jam_mulai',
-            'dokumentasi' => 'nullable|image|max:2048',
-        ]);
-        
-        $kelompokSiswa = Auth::user()->kelompokSiswa()->first();
-        
-        if (!$kelompokSiswa) {
-            return redirect()->route('siswa.dashboard')
-                ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
-        }
-        
-        // Upload dokumentasi jika ada
-        $dokumentasiPath = null;
-        if ($request->hasFile('dokumentasi')) {
-            $dokumentasiPath = $request->file('dokumentasi')
-                ->store('logbook-dokumentasi', 'public');
-        }
-        
-        // Konversi tanggal string ke Carbon untuk format
-        $tanggal = Carbon::parse($request->tanggal);
-        
-        $logbook = Logbook::create([
-            'kelompok_siswa_id' => $kelompokSiswa->id,
-            'tanggal' => $request->tanggal,
-            'kegiatan' => $request->kegiatan,
-            'deskripsi' => $request->deskripsi,
-            'jam_mulai' => $request->jam_mulai,
-            'jam_selesai' => $request->jam_selesai,
-            'dokumentasi' => $dokumentasiPath,
-            'status' => 'pending',
-        ]);
-        
-        // Buat notifikasi untuk dosen
-        if ($kelompokSiswa->kelompok && $kelompokSiswa->kelompok->dosen && $kelompokSiswa->kelompok->dosen->user) {
-            $dosen = $kelompokSiswa->kelompok->dosen->user;
-            Notifikasi::create([
-                'user_id' => $dosen->id,
-                'judul' => 'Logbook Baru',
-                'pesan' => Auth::user()->name . ' mengirim logbook baru untuk tanggal ' . 
-                          $tanggal->format('d/m/Y'),
-                'tipe' => 'info',
-                'url' => route('dosen.logbook.review', $logbook->id),
-            ]);
-        }
-        
-        // Notifikasi untuk PT
-        if ($kelompokSiswa->kelompok && $kelompokSiswa->kelompok->perusahaan && $kelompokSiswa->kelompok->perusahaan->user) {
-            $pt = $kelompokSiswa->kelompok->perusahaan->user;
-            Notifikasi::create([
-                'user_id' => $pt->id,
-                'judul' => 'Logbook Baru',
-                'pesan' => Auth::user()->name . ' mengirim logbook baru untuk tanggal ' . 
-                          $tanggal->format('d/m/Y'),
-                'tipe' => 'info',
-                'url' => route('pt.logbook.review', $logbook->id),
-            ]);
-        }
-        
-        return redirect()->route('siswa.logbook.index')
-            ->with('success', 'Logbook berhasil ditambahkan.');
+   public function store(Request $request)
+{
+    $request->validate([
+        'tanggal' => 'required|date',
+        'kegiatan' => 'required|string|max:255',
+        'deskripsi' => 'required|string|min:10',
+        'jam_mulai' => 'required',
+        'jam_selesai' => 'required|after:jam_mulai',
+        'dokumentasi' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
+    ]);
+    
+    $kelompokSiswa = Auth::user()->kelompokSiswa()->first();
+    
+    if (!$kelompokSiswa) {
+        return redirect()->route('siswa.dashboard')
+            ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
     }
+    
+    // Upload dokumentasi
+    $dokumentasiPath = null;
+    if ($request->hasFile('dokumentasi')) {
+        $file = $request->file('dokumentasi');
+        $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
+        $dokumentasiPath = $file->storeAs('logbook-dokumentasi', $filename, 'public');
+        
+        // Debug: cek apakah file tersimpan
+        \Log::info('File uploaded to: ' . $dokumentasiPath);
+    }
+    
+    $logbook = Logbook::create([
+        'kelompok_siswa_id' => $kelompokSiswa->id,
+        'tanggal' => $request->tanggal,
+        'kegiatan' => $request->kegiatan,
+        'deskripsi' => $request->deskripsi,
+        'jam_mulai' => $request->jam_mulai,
+        'jam_selesai' => $request->jam_selesai,
+        'dokumentasi' => $dokumentasiPath,
+        'status' => 'pending',
+    ]);
+    
+    return redirect()->route('siswa.logbook.index')
+        ->with('success', 'Logbook berhasil ditambahkan.');
+}
 
     /**
      * Display the specified logbook.

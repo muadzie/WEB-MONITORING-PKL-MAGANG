@@ -11,6 +11,7 @@ use App\Models\Laporan;
 use App\Models\KelompokSiswa;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\Notifikasi;
 
 class BimbinganController extends Controller
 {
@@ -121,20 +122,45 @@ class BimbinganController extends Controller
         return view('dosen.bimbingan.show', compact('kelompok', 'logbooks', 'laporans'));
     }
 
-    public function logbookPending()
-    {
-        $this->initDosen();
-        
-        $logbooks = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
-                    ->whereHas('kelompokSiswa.kelompok', function($q) {
-                        $q->where('dosen_id', $this->dosen->id);
-                    })
-                    ->where('status', 'pending')
-                    ->orderBy('tanggal', 'asc')
-                    ->paginate(15);
-        
-        return view('dosen.bimbingan.logbook-pending', compact('logbooks'));
+public function logbookPending(Request $request)
+{
+    $this->initDosen();
+    
+    $dosenId = $this->dosen->id;
+    
+    // Ambil semua kelompok untuk filter
+    $kelompoks = KelompokPkl::where('dosen_id', $dosenId)->orderBy('nama_kelompok')->get();
+    
+    $query = Logbook::with(['kelompokSiswa.siswa', 'kelompokSiswa.kelompok'])
+            ->whereHas('kelompokSiswa.kelompok', function($q) use ($dosenId) {
+                $q->where('dosen_id', $dosenId);
+            });
+    
+    // Filter berdasarkan status
+    if ($request->filled('status')) {
+        if ($request->status == 'pending') {
+            $query->whereNull('approved_by_dosen');
+        } elseif ($request->status == 'disetujui') {
+            $query->whereNotNull('approved_by_dosen');
+        }
     }
+    
+    // Filter berdasarkan kelompok
+    if ($request->filled('kelompok_id')) {
+        $query->whereHas('kelompokSiswa', function($q) use ($request) {
+            $q->where('kelompok_pkl_id', $request->kelompok_id);
+        });
+    }
+    
+    // Filter berdasarkan tanggal
+    if ($request->filled('tanggal')) {
+        $query->whereDate('tanggal', $request->tanggal);
+    }
+    
+    $logbooks = $query->orderBy('tanggal', 'desc')->paginate(15);
+    
+    return view('dosen.bimbingan.logbook-pending', compact('logbooks', 'kelompoks'));
+}
 
     public function reviewLogbook(Logbook $logbook)
     {
@@ -149,28 +175,46 @@ class BimbinganController extends Controller
         return view('dosen.bimbingan.review-logbook', compact('logbook'));
     }
 
-    public function approveLogbook(Request $request, Logbook $logbook)
-    {
-        $this->initDosen();
-        
-        if ($logbook->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
-            abort(403);
-        }
-        
-        $request->validate([
-            'catatan' => 'nullable|string',
-        ]);
-        
-        $logbook->update([
-            'status' => $request->action === 'approve' ? 'disetujui' : 'ditolak',
-            'catatan_dosen' => $request->catatan,
-            'approved_by_dosen' => Auth::id(),
-            'approved_at_dosen' => now(),
-        ]);
-        
-        return redirect()->route('dosen.logbook.pending')
-            ->with('success', 'Logbook berhasil direview.');
+public function approveLogbook(Request $request, Logbook $logbook)
+{
+    $this->initDosen();
+    
+    $dosenId = $this->dosen->id;
+    
+    // Cek kepemilikan
+    if ($logbook->kelompokSiswa->kelompok->dosen_id != $dosenId) {
+        abort(403, 'Anda tidak memiliki akses ke logbook ini');
     }
+    
+    $request->validate([
+        'action' => 'required|in:approve,reject',
+        'catatan' => 'nullable|string',
+    ]);
+    
+    $status = $request->action === 'approve' ? 'disetujui' : 'ditolak';
+    
+    $logbook->update([
+        'approval_dosen' => $status,
+        'catatan_dosen' => $request->catatan,
+        'approved_by_dosen' => Auth::id(),
+        'approved_at_dosen' => now(),
+        // Update status utama jika sudah diapprove oleh kedua belah pihak
+        'status' => ($status === 'disetujui' && $logbook->approval_pt === 'disetujui') ? 'disetujui' : 'pending',
+    ]);
+    
+    // Notifikasi ke siswa
+    Notifikasi::create([
+        'user_id' => $logbook->kelompokSiswa->siswa_id,
+        'judul' => 'Logbook ' . ucfirst($status) . ' oleh Dosen',
+        'pesan' => 'Logbook tanggal ' . $logbook->tanggal->format('d/m/Y') . ' telah ' . $status . ' oleh dosen pembimbing.',
+        'tipe' => $request->action === 'approve' ? 'success' : 'danger',
+        'url' => route('siswa.logbook.show', $logbook->id),
+    ]);
+    
+    $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
+    return redirect()->route('dosen.logbook.pending')
+        ->with('success', "Logbook berhasil {$message} oleh dosen.");
+}
 
     public function laporanIndex(Request $request)
 {

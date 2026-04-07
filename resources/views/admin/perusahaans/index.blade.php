@@ -64,11 +64,16 @@
                         </thead>
                         <tbody>
                             @forelse($perusahaans as $index => $perusahaan)
+                            @php
+                                $logoPerusahaan = $perusahaan->logo ?? $perusahaan->user->foto ?? null;
+                            @endphp
                             <tr>
                                 <td>{{ $perusahaans->firstItem() + $index }}</td>
                                 <td>
-                                    <img src="{{ $perusahaan->logo ? asset('storage/'.$perusahaan->logo) : asset('vendor/adminlte/dist/img/avatar.png') }}" 
-                                         class="img-circle img-size-32" alt="Logo">
+                                    <img class="profile-user-img img-fluid"
+                                         src="{{ $logoPerusahaan ? asset('storage/'.$logoPerusahaan) : asset('vendor/adminlte/dist/img/avatar.png') }}"
+                                         alt="{{ $perusahaan->nama_perusahaan }}"
+                                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                                 </td>
                                 <td>{{ $perusahaan->nama_perusahaan }}</td>
                                 <td>{{ $perusahaan->bidang_usaha }}</td>
@@ -83,36 +88,42 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.perusahaans.edit', $perusahaan->id) }}" class="btn btn-info btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('admin.perusahaans.show', $perusahaan->id) }}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <form action="{{ route('admin.perusahaans.toggle-status', $perusahaan->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @if($perusahaan->is_active)
-                                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Nonaktifkan perusahaan ini?')">
-                                                <i class="fas fa-ban"></i>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('admin.perusahaans.edit', $perusahaan->id) }}" class="btn btn-info" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('admin.perusahaans.show', $perusahaan->id) }}" class="btn btn-primary" title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <form action="{{ route('admin.perusahaans.toggle-status', $perusahaan->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @if($perusahaan->is_active)
+                                                <button type="submit" class="btn btn-warning" title="Nonaktifkan" onclick="return confirm('Nonaktifkan perusahaan ini?')">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            @else
+                                                <button type="submit" class="btn btn-success" title="Aktifkan" onclick="return confirm('Aktifkan perusahaan ini?')">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            @endif
+                                        </form>
+                                        <form action="{{ route('admin.perusahaans.destroy', $perusahaan->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" title="Hapus" onclick="return confirm('Hapus data perusahaan ini? Semua data terkait akan dihapus.')">
+                                                <i class="fas fa-trash"></i>
                                             </button>
-                                        @else
-                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Aktifkan perusahaan ini?')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        @endif
-                                    </form>
-                                    <form action="{{ route('admin.perusahaans.destroy', $perusahaan->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus data perusahaan ini?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="9" class="text-center">Tidak ada data</td>
+                                <td colspan="9" class="text-center">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-info-circle"></i> Tidak ada data perusahaan
+                                    </div>
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -127,3 +138,18 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .btn-group-sm .btn {
+        margin: 0 2px;
+        padding: 5px 10px;
+    }
+    .btn-group-sm .btn i {
+        font-size: 12px;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+</style>
+@endpush
