@@ -109,4 +109,6 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+untuk database ada juga yang di file database lengkap udah berupa sql
+sesuaikan server masing-masing (xampp/atau hal lain) aktifkan
 php artisan serve
