@@ -16,7 +16,8 @@
 <br><br>
 
 > **Aplikasi berbasis Laravel untuk memonitor kegiatan PKL / Magang secara digital, modern, terstruktur, dan profesional.**  
-> Mendukung **multi-role**, **approval workflow**, **jurnal harian**, **absensi**, **laporan**, dan **dashboard monitoring**.
+> Mendukung **multi-role**, **approval workflow**, **jurnal harian**, **absensi**, **laporan**, dan **dashboard monitoring**
+> > **CREATOR BY ILHAM MU'ADZ FAKHRIZI AND TEAM (RIDWAN,DHIFKA,ADRIAS,REZA)**.
 
 </div>
 
@@ -87,7 +88,7 @@ Dengan platform ini, seluruh proses seperti **penempatan siswa**, **absensi hari
 | Layer | Teknologi |
 |------|-----------|
 | Framework | Laravel |
-| Backend | PHP 8.1+ |
+| Backend | PHP 8.4+ |
 | Database | MySQL / MariaDB |
 | Frontend | Blade + Bootstrap / AdminLTE / ArchitectUI |
 | Authentication | Laravel Auth / Custom Auth |
