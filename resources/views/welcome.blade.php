@@ -701,7 +701,7 @@
                         <span>Apakah sistem ini gratis?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
-                    <div class="faq-answer">Ya, untuk penggunaan dasar. Tersedia paket premium untuk fitur lanjutan dengan harga terjangkau.</div>
+                    <div class="faq-answer">Ya, Tentu saja ini open source di github @muadzie.</div>
                 </div>
                 <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
                     <div class="faq-question">
@@ -748,7 +748,7 @@
                 <div class="feature-card text-center">
                     <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
                     <h5>Alamat Kantor</h5>
-                    <p class="text-muted">Jl. Teknologi No. 123, Jakarta Selatan</p>
+                    <p class="text-muted">Mahasiswa Unsub</p>
                 </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
@@ -814,7 +814,7 @@
         </div>
         <hr class="my-4 bg-secondary">
         <div class="text-center">
-            <p class="mb-0">&copy; {{ date('Y') }} SISFO PKL. All rights reserved.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} SISFO PKL. By Ilham Mu'adz Fakhrizi and Tim❤️.</p>
         </div>
     </div>
 </footer>

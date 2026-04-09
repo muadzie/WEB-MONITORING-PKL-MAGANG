@@ -136,6 +136,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     Route::get('/ijin-sakit', [App\Http\Controllers\Dosen\IjinSakitController::class, 'index'])->name('ijin-sakit.index');
     Route::post('/ijin-sakit/{id}/approve', [App\Http\Controllers\Dosen\IjinSakitController::class, 'approve'])->name('ijin-sakit.approve');
     Route::post('/ijin-sakit/{id}/reject', [App\Http\Controllers\Dosen\IjinSakitController::class, 'reject'])->name('ijin-sakit.reject');
+    Route::delete('/ijin-sakit/{ijinSakit}', [App\Http\Controllers\Dosen\IjinSakitController::class, 'destroy'])->name('ijin-sakit.destroy');
 });
     
     // ==================== PT ROUTES ====================

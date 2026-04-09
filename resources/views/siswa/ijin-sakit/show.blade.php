@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8 mx-auto">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Detail Pengajuan</h3>
@@ -20,7 +20,7 @@
                     <div class="col-md-6">
                         <table class="table table-bordered">
                             <tr>
-                                <th width="200">Jenis</th>
+                                <th width="150">Jenis</th>
                                 <td>
                                     @if($ijinSakit->jenis == 'izin')
                                         <span class="badge badge-info">Izin</span>
@@ -69,11 +69,15 @@
                                 <h5 class="card-title">Bukti Foto</h5>
                             </div>
                             <div class="card-body text-center">
-                                <img src="{{ asset('storage/'.$ijinSakit->bukti_foto) }}" class="img-fluid" style="max-height: 300px;">
-                                <br>
-                                <a href="{{ asset('storage/'.$ijinSakit->bukti_foto) }}" download class="btn btn-primary mt-3">
-                                    <i class="fas fa-download"></i> Download Bukti
-                                </a>
+                                @if($ijinSakit->bukti_foto && Storage::disk('public')->exists($ijinSakit->bukti_foto))
+                                    <img src="{{ asset('storage/'.$ijinSakit->bukti_foto) }}" class="img-fluid img-thumbnail" style="max-height: 300px;">
+                                    <br>
+                                    <a href="{{ asset('storage/'.$ijinSakit->bukti_foto) }}" download class="btn btn-primary mt-3">
+                                        <i class="fas fa-download"></i> Download Bukti
+                                    </a>
+                                @else
+                                    <div class="alert alert-warning">File tidak ditemukan</div>
+                                @endif
                             </div>
                         </div>
                     </div>

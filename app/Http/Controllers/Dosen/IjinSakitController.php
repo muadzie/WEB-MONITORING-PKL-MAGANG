@@ -9,6 +9,7 @@ use App\Models\IjinSakit;
 use App\Models\KelompokPkl;
 use App\Models\KelompokSiswa;
 use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Storage;
 
 class IjinSakitController extends Controller
 {
@@ -97,4 +98,21 @@ class IjinSakitController extends Controller
         
         return redirect()->back()->with('error', 'Pengajuan ditolak.');
     }
+
+   public function destroy($id)
+{
+    $this->initDosen();
+
+    $ijinSakit = IjinSakit::findOrFail($id);
+
+    // Hapus file foto jika ada
+    if ($ijinSakit->bukti_foto && Storage::disk('public')->exists($ijinSakit->bukti_foto)) {
+        Storage::disk('public')->delete($ijinSakit->bukti_foto);
+    }
+
+    $ijinSakit->delete();
+
+    return redirect()->route('dosen.ijin-sakit.index')
+        ->with('success', 'Pengajuan berhasil dihapus.');
+}
 }
