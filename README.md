@@ -73,6 +73,7 @@ Dengan platform ini, seluruh proses seperti **penempatan siswa**, **absensi hari
 | Data Guru Pembimbing | CRUD guru pembimbing sekolah |
 | Data Perusahaan / Instansi | CRUD tempat PKL / Magang |
 | Penempatan PKL | Penempatan siswa ke perusahaan / instansi |
+| Penempatan PKL MAP radius | penempatan menggunakan map radius yang disesuaikan penempatan |
 | Absensi Harian | Kehadiran harian siswa selama PKL |
 | Jurnal Harian | Catatan kegiatan harian siswa |
 | Approval Jurnal | Persetujuan jurnal oleh pembimbing perusahaan |
@@ -80,6 +81,7 @@ Dengan platform ini, seluruh proses seperti **penempatan siswa**, **absensi hari
 | Upload Laporan | Pengumpulan laporan PKL / Magang |
 | Rekap Monitoring | Monitoring progres dan status penyelesaian |
 | CRUD Lengkap | Seluruh master data dapat dikelola penuh |
+| Absensi Radius | Absensi secara radius dan otomati alfa ketika jauh dari radius pt |
 
 ---
 
