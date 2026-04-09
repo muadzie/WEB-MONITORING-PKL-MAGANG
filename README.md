@@ -103,7 +103,7 @@ Dengan platform ini, seluruh proses seperti **penempatan siswa**, **absensi hari
 > **Untuk yang ingin langsung cepat jalan**, jalankan perintah berikut secara berurutan:
 
 ```bash
-git clone https://github.com/username/nama-project.git
+https://github.com/muadzie/WEB-MONITORING-PKL-MAGANG.git
 cd nama-project
 composer install
 cp .env.example .env
