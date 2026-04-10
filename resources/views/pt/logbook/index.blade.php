@@ -107,8 +107,8 @@
                                             </a>
                                         @endif
                                     </div>
-                                    
-                                    <!-- Modal Preview (RAPIH) -->
+
+                                    <!-- Modal Preview -->
                                     <div class="modal fade" id="previewModal{{ $logbook->id }}" tabindex="-1" role="dialog">
                                         <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
@@ -124,13 +124,12 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <table class="table table-sm table-bordered">
-                                                                <tr><th width="35%">Tanggal</th><td>{{ $logbook->tanggal->format('d/m/Y') }}</td></tr>
+                                                                <tr><th>Tanggal</th><td>{{ $logbook->tanggal->format('d/m/Y') }}</td></tr>
                                                                 <tr><th>Siswa</th><td>{{ $logbook->kelompokSiswa->siswa->name }}</td></tr>
                                                                 <tr><th>NIM</th><td>{{ $logbook->kelompokSiswa->nim }}</td></tr>
                                                                 <tr><th>Kelompok</th><td>{{ $logbook->kelompokSiswa->kelompok->nama_kelompok }}</td></tr>
                                                                 <tr><th>Jam</th><td>{{ $logbook->jam_mulai }} - {{ $logbook->jam_selesai }}</td></tr>
-                                                                <tr>
-                                                                    <th>Status</th>
+                                                                <tr><th>Status</th>
                                                                     <td>
                                                                         @if($logbook->status == 'pending')
                                                                             <span class="badge badge-warning">Pending</span>
@@ -141,26 +140,20 @@
                                                                         @endif
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <th>Review PT</th>
-                                                                    <td>
-                                                                        @if($logbook->approved_by_pt)
-                                                                            <span class="badge badge-success">Sudah</span>
-                                                                        @else
-                                                                            <span class="badge badge-danger">Belum</span>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Review Dosen</th>
-                                                                    <td>
-                                                                        @if($logbook->approved_by_dosen)
-                                                                            <span class="badge badge-success">Sudah</span>
-                                                                        @else
-                                                                            <span class="badge badge-warning">Belum</span>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
+                                                                <tr><th>Review PT</th><td>
+                                                                    @if($logbook->approved_by_pt)
+                                                                        <span class="badge badge-success">Sudah</span>
+                                                                    @else
+                                                                        <span class="badge badge-danger">Belum</span>
+                                                                    @endif
+                                                                </td></tr>
+                                                                <tr><th>Review Dosen</th><td>
+                                                                    @if($logbook->approved_by_dosen)
+                                                                        <span class="badge badge-success">Sudah</span>
+                                                                    @else
+                                                                        <span class="badge badge-warning">Belum</span>
+                                                                    @endif
+                                                                </td></tr>
                                                             </table>
                                                         </div>
                                                         <div class="col-md-6">
@@ -218,7 +211,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </td>
+                                 </div>
+                                
                              </div>
                             @empty
                             <tr>
@@ -226,16 +220,16 @@
                             </tr>
                             @endforelse
                         </tbody>
-                     </div>
+                    </table>
                 </div>
-                
+
                 <div class="mt-3">
                     {{ $logbooks->withQueryString()->links() }}
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+            </div> <!-- /.card-body -->
+        </div> <!-- /.card -->
+    </div> <!-- /.col-12 -->
+</div> <!-- /.row -->
 @endsection
 
 @push('styles')
