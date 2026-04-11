@@ -203,4 +203,9 @@ class KelompokController extends Controller
             'email' => $siswa->email,
         ]);
     }
+    public function selesaikan(KelompokPkl $kelompok)
+{
+    $kelompok->update(['status' => 'selesai']);
+    return redirect()->back()->with('success', 'Kelompok PKL telah diselesaikan.');
+}
 }

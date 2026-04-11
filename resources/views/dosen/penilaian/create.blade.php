@@ -10,7 +10,7 @@
             <div class="card-header">
                 <h3 class="card-title">Form Input Nilai PKL</h3>
                 <div class="card-tools">
-                    <a href="{{ route('dosen.penilaian.select-siswa') }}" class="btn btn-secondary btn-sm">
+                    <a href="{{ route('dosen.penilaian.index') }}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>

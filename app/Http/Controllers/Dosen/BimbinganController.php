@@ -304,4 +304,13 @@ public function approveLogbook(Request $request, Logbook $logbook)
         
         return Storage::disk('public')->download($file);
     }
+    public function selesaikan(KelompokPkl $kelompok)
+{
+    // Pastikan kelompok ini adalah bimbingan dari dosen yang login
+    if ($kelompok->dosen_id != $this->dosen->id) {
+        abort(403);
+    }
+    $kelompok->update(['status' => 'selesai']);
+    return redirect()->back()->with('success', 'Kelompok bimbingan telah diselesaikan.');
+}
 }

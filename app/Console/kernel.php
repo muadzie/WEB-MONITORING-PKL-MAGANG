@@ -88,4 +88,10 @@ class Kernel extends HttpKernel
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+{
+    // Jalankan setiap hari jam 00:05
+    $schedule->command('pkl:selesaikan')->dailyAt('00:05');
+}
 }

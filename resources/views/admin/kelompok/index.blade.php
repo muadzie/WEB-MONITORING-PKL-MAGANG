@@ -116,6 +116,12 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @if($kelompok->status == 'aktif')
+<form action="{{ url('/admin/kelompok/'.$kelompok->id.'/selesaikan') }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+</form>
+@endif
                                 </td>
                             </tr>
 

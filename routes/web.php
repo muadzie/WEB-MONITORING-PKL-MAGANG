@@ -68,6 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Manajemen Kelompok PKL
         Route::resource('kelompok', App\Http\Controllers\Admin\KelompokController::class);
         Route::post('/kelompok/{kelompok}/approve', [App\Http\Controllers\Admin\KelompokController::class, 'approve'])->name('kelompok.approve');
+        Route::post('/kelompok/{kelompok}/selesaikan', [App\Http\Controllers\Admin\KelompokController::class, 'selesaikan'])->name('admin.kelompok.selesaikan');
         
         // ========== EXPORT ROUTES ==========
         Route::prefix('export')->name('export.')->group(function () {
@@ -99,7 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/logbook-all', [App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbook.index');
     });
     
-    // ==================== DOSEN ROUTES ====================
+    
     // ==================== DOSEN ROUTES ====================
 Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->group(function () {
     
@@ -109,6 +110,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     // Bimbingan
     Route::get('/bimbingan', [App\Http\Controllers\Dosen\BimbinganController::class, 'index'])->name('bimbingan.index');
     Route::get('/bimbingan/{kelompok}', [App\Http\Controllers\Dosen\BimbinganController::class, 'show'])->name('bimbingan.show');
+    Route::post('/bimbingan/{kelompok}/selesaikan', [App\Http\Controllers\Dosen\BimbinganController::class, 'selesaikan'])->name('dosen.bimbingan.selesaikan');
     
     // Logbook
     Route::get('/logbook/pending', [App\Http\Controllers\Dosen\BimbinganController::class, 'logbookPending'])->name('logbook.pending');
@@ -124,6 +126,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     
     // Penilaian
     Route::resource('penilaian', App\Http\Controllers\Dosen\PenilaianController::class);
+    Route::get('/penilaian/select-siswa', [App\Http\Controllers\Dosen\PenilaianController::class, 'create'])->name('penilaian.select-siswa');
 
     // Absensi
     Route::get('/absensi/siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'index'])->name('absensi.siswa');
@@ -159,6 +162,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
         
         // Penilaian
         Route::resource('penilaian', App\Http\Controllers\Perusahaan\PenilaianPtController::class);
+        Route::get('/penilaian/select-siswa', [App\Http\Controllers\Perusahaan\PenilaianPtController::class, 'create'])->name('penilaian.select-siswa');
       
         
         // Laporan
