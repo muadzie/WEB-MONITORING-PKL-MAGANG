@@ -68,7 +68,7 @@
                             <tr>
                                 <td>{{ $dosens->firstItem() + $index }}</td>
                                 <td>
-                                    <img class="profile-user-img img-fluid"
+                                    <img class="profile-user-img img-fluid img-circle"
      src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
      alt="Dosen profile picture"
      style="width: 80px; height: 80px; min-width: 80px; min-height: 80px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;  box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
