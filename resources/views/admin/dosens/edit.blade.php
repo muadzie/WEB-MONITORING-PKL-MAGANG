@@ -40,16 +40,6 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="gelar_depan">Gelar Depan</label>
-                                <input type="text" class="form-control @error('gelar_depan') is-invalid @enderror" 
-                                       id="gelar_depan" name="gelar_depan" value="{{ old('gelar_depan', $dosen->gelar_depan) }}">
-                                @error('gelar_depan')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
                                 <label for="gelar_belakang">Gelar Belakang</label>
                                 <input type="text" class="form-control @error('gelar_belakang') is-invalid @enderror" 
                                        id="gelar_belakang" name="gelar_belakang" value="{{ old('gelar_belakang', $dosen->gelar_belakang) }}">
@@ -94,16 +84,6 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="fakultas">Fakultas <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('fakultas') is-invalid @enderror" 
-                                       id="fakultas" name="fakultas" value="{{ old('fakultas', $dosen->fakultas) }}" required>
-                                @error('fakultas')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="is_active">Status</label>

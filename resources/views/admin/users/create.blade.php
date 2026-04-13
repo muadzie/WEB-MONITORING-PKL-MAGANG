@@ -90,16 +90,7 @@
             @enderror
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="fakultas">Fakultas <span class="text-danger">*</span></label>
-            <input type="text" class="form-control @error('fakultas') is-invalid @enderror" 
-                   id="fakultas" name="fakultas" value="{{ old('fakultas') }}" required>
-            @error('fakultas')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
+    
 </div>
                     
                     <div class="row">

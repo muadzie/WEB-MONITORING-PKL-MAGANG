@@ -38,7 +38,7 @@
                         <td>{{ $laporan->kelompokSiswa->kelas }}</td>
                     </tr>
                     <tr>
-                        <th>Prodi</th>
+                        <th>Jurusan</th>
                         <td>{{ $laporan->kelompokSiswa->prodi }}</td>
                     </tr>
                     <tr>
@@ -46,7 +46,7 @@
                         <td>{{ $laporan->kelompokSiswa->kelompok->nama_kelompok }}</td>
                     </tr>
                     <tr>
-                        <th>Dosen Pembimbing</th>
+                        <th>Guru Pembimbing</th>
                         <td>{{ $laporan->kelompokSiswa->kelompok->dosen->nama_dosen ?? '-' }}</td>
                     </tr>
                     <tr>
