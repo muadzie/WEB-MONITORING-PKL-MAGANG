@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
-    public function index()
+     public function index()
     {
         $kelompokSiswa = Auth::user()->kelompokSiswa()->first();
         
@@ -20,7 +20,8 @@ class AbsensiController extends Controller
                 ->with('error', 'Anda belum terdaftar dalam kelompok PKL.');
         }
 
-        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
+        $kelompok = $kelompokSiswa->kelompok;
+        $perusahaan = $kelompok->perusahaan;
         
         // Cek apakah perusahaan punya koordinat
         if (!$perusahaan->latitude || !$perusahaan->longitude) {
@@ -28,16 +29,19 @@ class AbsensiController extends Controller
                 ->with('error', 'Lokasi perusahaan belum diatur oleh admin. Silakan hubungi admin.');
         }
 
+        // Cek apakah PKL sudah berakhir
+        $today = Carbon::today();
+        $isExpired = $kelompok->tanggal_selesai < $today;
+
         $absensis = Absensi::where('siswa_id', Auth::id())
                     ->orderBy('tanggal', 'desc')
                     ->paginate(15);
 
-        $today = Carbon::today();
         $todayAbsen = Absensi::where('siswa_id', Auth::id())
                     ->whereDate('tanggal', $today)
                     ->first();
 
-        return view('siswa.absensi.index', compact('absensis', 'todayAbsen', 'perusahaan'));
+        return view('siswa.absensi.index', compact('absensis', 'todayAbsen', 'perusahaan', 'isExpired'));
     }
 
     public function store(Request $request)
@@ -48,7 +52,14 @@ class AbsensiController extends Controller
             return response()->json(['error' => 'Belum terdaftar kelompok'], 400);
         }
 
-        $perusahaan = $kelompokSiswa->kelompok->perusahaan;
+        $kelompok = $kelompokSiswa->kelompok;
+        $perusahaan = $kelompok->perusahaan;
+
+        // Cek apakah PKL sudah berakhir
+        $today = Carbon::today();
+        if ($kelompok->tanggal_selesai < $today) {
+            return response()->json(['error' => 'Masa PKL Anda telah berakhir. Tidak dapat melakukan absensi.'], 400);
+        }
         
         // Validasi lokasi
         $distance = $this->calculateDistance(
@@ -66,7 +77,6 @@ class AbsensiController extends Controller
             ], 400);
         }
 
-        $today = Carbon::today();
         $existing = Absensi::where('siswa_id', Auth::id())
                     ->whereDate('tanggal', $today)
                     ->first();

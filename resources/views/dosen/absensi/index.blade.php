@@ -6,16 +6,16 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-    <h3 class="card-title">Absensi Siswa Bimbingan</h3>
-    <div class="card-tools">
-        <a href="{{ route('dosen.absensi.export-excel') }}" class="btn btn-success btn-sm">
-            <i class="fas fa-file-excel"></i> Export Excel
-        </a>
-        <a href="{{ route('dosen.absensi.rekap') }}" class="btn btn-info btn-sm">
-            <i class="fas fa-chart-bar"></i> Rekap Absensi
-        </a>
+        <h3 class="card-title">Absensi Siswa Bimbingan</h3>
+        <div class="card-tools">
+            <a href="{{ route('dosen.absensi.export-excel') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
+            <a href="{{ route('dosen.absensi.rekap') }}" class="btn btn-info btn-sm">
+                <i class="fas fa-chart-bar"></i> Rekap Absensi
+            </a>
+        </div>
     </div>
-</div>
     <div class="card-body">
         <form method="GET" action="{{ route('dosen.absensi.siswa') }}" class="form-inline mb-3">
             <div class="form-group mr-2">
@@ -34,50 +34,58 @@
 
         @if($selectedKelompok)
             <h4>Kelompok: {{ $selectedKelompok->nama_kelompok }}</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>NIM</th>
-                            <th>Nama Siswa</th>
-                            <th>Status Absen Hari Ini</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($siswas as $index => $siswa)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $siswa->nomor_induk }}</td>
-                            <td>{{ $siswa->name }}</td>
-                            <td>
-                                @if($siswa->absensi_hari_ini)
-                                    <span class="badge badge-success">
-                                        <i class="fas fa-check-circle"></i> Sudah Absen
-                                    </span>
-                                @else
-                                    <span class="badge badge-danger">
-                                        <i class="fas fa-clock"></i> Belum Absen
-                                    </span>
-                                @endif
-                            </td>
-                            <td>
-                                @if(!$siswa->absensi_hari_ini)
-                                    <button class="btn btn-success btn-sm btn-absen" 
-                                            data-id="{{ $siswa->id }}" 
-                                            data-name="{{ $siswa->name }}">
-                                        <i class="fas fa-fingerprint"></i> Absenkan
-                                    </button>
-                                @else
-                                    <span class="text-muted">Sudah diabsen</span>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @if(isset($isExpired) && $isExpired)
+                <div class="alert alert-danger">
+                    <i class="fas fa-ban"></i> <strong>Perhatian!</strong> Masa PKL kelompok ini telah berakhir pada tanggal
+                    <strong>{{ \Carbon\Carbon::parse($selectedKelompok->tanggal_selesai)->format('d F Y') }}</strong>.
+                    Tidak dapat melakukan absensi.
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>NIM</th>
+                                <th>Nama Siswa</th>
+                                <th>Status Absen Hari Ini</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($siswas as $index => $siswa)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $siswa->nomor_induk }}</td>
+                                <td>{{ $siswa->name }}</td>
+                                <td>
+                                    @if($siswa->absensi_hari_ini)
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle"></i> Sudah Absen
+                                        </span>
+                                    @else
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-clock"></i> Belum Absen
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!$siswa->absensi_hari_ini)
+                                        <button class="btn btn-success btn-sm btn-absen"
+                                                data-id="{{ $siswa->id }}"
+                                                data-name="{{ $siswa->name }}">
+                                            <i class="fas fa-fingerprint"></i> Absenkan
+                                        </button>
+                                    @else
+                                        <span class="text-muted">Sudah diabsen</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         @endif
     </div>
 </div>
@@ -89,7 +97,7 @@ $(document).ready(function() {
     $('.btn-absen').click(function() {
         let id = $(this).data('id');
         let name = $(this).data('name');
-        
+
         if (confirm('Absenkan ' + name + ' sebagai hadir?')) {
             $.ajax({
                 url: '{{ url("dosen/absensi/absen-siswa") }}/' + id,
@@ -106,7 +114,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr) {
-                    alert('Terjadi kesalahan: ' + xhr.responseJSON?.error || 'Unknown error');
+                    alert('Terjadi kesalahan: ' + (xhr.responseJSON?.error || 'Unknown error'));
                 }
             });
         }

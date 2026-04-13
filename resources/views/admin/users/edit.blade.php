@@ -82,11 +82,19 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="role">Role</label>
-                                <input type="text" class="form-control" value="{{ ucfirst($user->role) }}" readonly disabled>
-                            </div>
-                        </div>
+    <div class="form-group">
+        <label for="role">Role</label>
+        <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
+            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+            <option value="dosen" {{ $user->role == 'dosen' ? 'selected' : '' }}>Dosen</option>
+            <option value="pt" {{ $user->role == 'pt' ? 'selected' : '' }}>PT</option>
+            <option value="siswa" {{ $user->role == 'siswa' ? 'selected' : '' }}>Siswa</option>
+        </select>
+        @error('role')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="is_active">Status</label>

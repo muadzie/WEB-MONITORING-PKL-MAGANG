@@ -121,6 +121,7 @@ class UserController extends Controller
             'address' => 'nullable|string',
             'foto' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'role' => 'required|in:admin,dosen,pt,siswa',
         ]);
         
         $data = [
@@ -130,6 +131,7 @@ class UserController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => $request->has('is_active'),
+            'role' => $request->role,
         ];
         
         // Update password jika diisi

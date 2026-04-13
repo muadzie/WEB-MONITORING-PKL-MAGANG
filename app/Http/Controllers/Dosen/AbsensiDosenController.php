@@ -43,7 +43,7 @@ class AbsensiDosenController extends Controller
         return KelompokSiswa::whereIn('kelompok_pkl_id', $kelompokIds)->pluck('siswa_id');
     }
 
-    public function index(Request $request)
+     public function index(Request $request)
     {
         $dosenId = $this->getDosenId();
         
@@ -51,20 +51,27 @@ class AbsensiDosenController extends Controller
         
         $selectedKelompok = null;
         $siswas = collect();
+        $isExpired = false;
         
         if ($request->filled('kelompok_id')) {
             $selectedKelompok = KelompokPkl::with('anggota.siswa')->find($request->kelompok_id);
             if ($selectedKelompok) {
-                $siswas = $selectedKelompok->anggota->map(function($item) {
-                    $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
-                                                        ->whereDate('tanggal', Carbon::today())
-                                                        ->first();
-                    return $item->siswa;
-                });
+                // Cek apakah PKL sudah berakhir
+                $today = Carbon::today();
+                $isExpired = $selectedKelompok->tanggal_selesai < $today;
+                
+                if (!$isExpired) {
+                    $siswas = $selectedKelompok->anggota->map(function($item) {
+                        $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
+                                                            ->whereDate('tanggal', Carbon::today())
+                                                            ->first();
+                        return $item->siswa;
+                    });
+                }
             }
         }
         
-        return view('dosen.absensi.index', compact('kelompoks', 'selectedKelompok', 'siswas'));
+        return view('dosen.absensi.index', compact('kelompoks', 'selectedKelompok', 'siswas', 'isExpired'));
     }
 
     public function absenSiswa(Request $request, $siswaId)
@@ -76,6 +83,12 @@ class AbsensiDosenController extends Controller
         
         if (!$kelompokSiswa) {
             return response()->json(['error' => 'Siswa tidak ditemukan dalam kelompok'], 400);
+        }
+        
+        // Cek apakah PKL sudah berakhir
+        $kelompok = $kelompokSiswa->kelompok;
+        if ($kelompok->tanggal_selesai < Carbon::today()) {
+            return response()->json(['error' => 'Masa PKL kelompok ini telah berakhir, tidak dapat melakukan absensi.'], 400);
         }
         
         $today = Carbon::today();
