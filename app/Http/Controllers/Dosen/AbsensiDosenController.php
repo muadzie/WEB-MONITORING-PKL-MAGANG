@@ -60,14 +60,13 @@ class AbsensiDosenController extends Controller
                 $today = Carbon::today();
                 $isExpired = $selectedKelompok->tanggal_selesai < $today;
                 
-                if (!$isExpired) {
-                    $siswas = $selectedKelompok->anggota->map(function($item) {
-                        $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
-                                                            ->whereDate('tanggal', Carbon::today())
-                                                            ->first();
-                        return $item->siswa;
-                    });
-                }
+                // Selalu kirim data siswa, meskipun expired
+$siswas = $selectedKelompok->anggota->map(function($item) {
+    $item->siswa->absensi_hari_ini = Absensi::where('siswa_id', $item->siswa_id)
+                                        ->whereDate('tanggal', Carbon::today())
+                                        ->first();
+    return $item->siswa;
+});
             }
         }
         
@@ -399,4 +398,84 @@ class AbsensiDosenController extends Controller
         if ($persentase >= 50) return 'D (Kurang)';
         return 'E (Sangat Kurang)';
     }
+
+    /**
+ * Export absensi untuk satu siswa (individu)
+ */
+public function exportSiswaIndividu($siswaId)
+{
+    $this->initDosen();
+
+    $siswa = User::findOrFail($siswaId);
+    $kelompokSiswa = KelompokSiswa::where('siswa_id', $siswaId)->first();
+    
+    if (!$kelompokSiswa) {
+        return back()->with('error', 'Siswa tidak ditemukan dalam kelompok.');
+    }
+
+    $absensis = Absensi::where('siswa_id', $siswaId)
+                ->orderBy('tanggal', 'asc')
+                ->get();
+
+    $filename = 'absensi-' . $siswa->name . '-' . date('Y-m-d') . '.xls';
+    
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    echo $this->generateSiswaIndividuHTML($siswa, $absensis);
+    exit;
+}
+
+private function generateSiswaIndividuHTML($siswa, $absensis)
+{
+    $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Absensi ' . $siswa->name . '</title>';
+    $html .= '<style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { color: #4472C4; }
+        table { border-collapse: collapse; width: 100%; }
+        th { background-color: #4472C4; color: white; border: 1px solid #333; padding: 10px; }
+        td { border: 1px solid #999; padding: 8px; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .hadir { color: green; font-weight: bold; }
+        .izin { color: blue; font-weight: bold; }
+        .sakit { color: orange; font-weight: bold; }
+        .alpha { color: red; font-weight: bold; }
+    </style></head><body>';
+    
+    $html .= '<div class="header"><h2>LAPORAN ABSENSI INDIVIDU</h2>';
+    $html .= '<p>Nama: ' . $siswa->name . '</p>';
+    $html .= '<p>NIM: ' . $siswa->nomor_induk . '</p>';
+    $html .= '<p>Tanggal Export: ' . Carbon::now()->format('d F Y H:i:s') . '</p></div>';
+    
+    $html .= '<table><thead><tr>';
+    $html .= '<th>No</th><th>Tanggal</th><th>Jam Masuk</th><th>Jam Keluar</th><th>Status</th><th>Keterangan</th>';
+    $html .= '</tr></thead><tbody>';
+    
+    $no = 1;
+    foreach ($absensis as $absen) {
+        $statusClass = match($absen->status) {
+            'hadir' => 'hadir',
+            'izin' => 'izin',
+            'sakit' => 'sakit',
+            'alpha' => 'alpha',
+            default => ''
+        };
+        $html .= '<tr>';
+        $html .= '<td align="center">' . $no++ . '</td>';
+        $html .= '<td align="center">' . Carbon::parse($absen->tanggal)->format('d/m/Y') . '</td>';
+        $html .= '<td align="center">' . ($absen->jam_masuk ? Carbon::parse($absen->jam_masuk)->format('H:i:s') : '-') . '</td>';
+        $html .= '<td align="center">' . ($absen->jam_keluar ? Carbon::parse($absen->jam_keluar)->format('H:i:s') : '-') . '</td>';
+        $html .= '<td align="center" class="' . $statusClass . '">' . $this->getStatusText($absen->status) . '</td>';
+        $html .= '<td>' . ($absen->keterangan ?? '-') . '</td>';
+        $html .= '</tr>';
+    }
+    
+    $html .= '</tbody></table>';
+    $html .= '<div class="footer"><p>Total Data: ' . $absensis->count() . '</p></div>';
+    $html .= '</body></html>';
+    
+    return $html;
+}
 }

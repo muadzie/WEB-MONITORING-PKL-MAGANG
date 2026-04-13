@@ -12,9 +12,7 @@
                 <h3>{{ $statistik['total_hadir'] ?? 0 }}</h3>
                 <p>Total Hadir</p>
             </div>
-            <div class="icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
             <div class="small-box-footer">
                 <i class="fas fa-calendar-alt"></i> Hari ini
             </div>
@@ -26,9 +24,7 @@
                 <h3>{{ $statistik['total_izin'] ?? 0 }}</h3>
                 <p>Total Izin</p>
             </div>
-            <div class="icon">
-                <i class="fas fa-file-alt"></i>
-            </div>
+            <div class="icon"><i class="fas fa-file-alt"></i></div>
             <div class="small-box-footer">
                 <i class="fas fa-calendar-alt"></i> Hari ini
             </div>
@@ -40,9 +36,7 @@
                 <h3>{{ $statistik['total_sakit'] ?? 0 }}</h3>
                 <p>Total Sakit</p>
             </div>
-            <div class="icon">
-                <i class="fas fa-thermometer-half"></i>
-            </div>
+            <div class="icon"><i class="fas fa-thermometer-half"></i></div>
             <div class="small-box-footer">
                 <i class="fas fa-calendar-alt"></i> Hari ini
             </div>
@@ -54,9 +48,7 @@
                 <h3>{{ $statistik['total_alpha'] ?? 0 }}</h3>
                 <p>Total Alpha</p>
             </div>
-            <div class="icon">
-                <i class="fas fa-times-circle"></i>
-            </div>
+            <div class="icon"><i class="fas fa-times-circle"></i></div>
             <div class="small-box-footer">
                 <i class="fas fa-calendar-alt"></i> Hari ini
             </div>
@@ -72,6 +64,7 @@
         </h3>
         <div class="card-tools">
             <div class="btn-group">
+                {{-- Tombol export akan mengikuti filter yang dipilih (termasuk kelompok) --}}
                 <a href="{{ route('dosen.absensi.export-excel', request()->all()) }}" class="btn btn-success btn-sm">
                     <i class="fas fa-file-excel"></i> Export Detail
                 </a>
@@ -317,12 +310,7 @@ $(document).ready(function() {
                     {{ $statistik['total_sakit'] ?? 0 }},
                     {{ $statistik['total_alpha'] ?? 0 }}
                 ],
-                backgroundColor: [
-                    '#28a745',
-                    '#17a2b8',
-                    '#ffc107',
-                    '#dc3545'
-                ],
+                backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#dc3545'],
                 borderWidth: 0
             }]
         },
@@ -330,9 +318,7 @@ $(document).ready(function() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom'
-                },
+                legend: { position: 'bottom' },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -348,8 +334,7 @@ $(document).ready(function() {
         }
     });
 
-    // ==================== CHART TREN ====================
-    // Data untuk chart tren (contoh, bisa disesuaikan dengan data real)
+    // ==================== CHART TREN (contoh, bisa diganti dengan data real) ====================
     var trenLabels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     var trenData = [45, 52, 48, 55, 50, 30];
     
@@ -375,54 +360,20 @@ $(document).ready(function() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
+            plugins: { legend: { display: false } },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Jumlah Siswa'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Hari'
-                    }
-                }
+                y: { beginAtZero: true, title: { display: true, text: 'Jumlah Siswa' } },
+                x: { title: { display: true, text: 'Hari' } }
             }
         }
     });
-    <div class="card-header">
-    <h3 class="card-title">
-        <i class="fas fa-filter"></i> Filter Data Absensi
-    </h3>
-    <div class="card-tools">
-        <div class="btn-group">
-            <a href="{{ route('dosen.absensi.export-excel', request()->all()) }}" class="btn btn-success btn-sm" target="_blank">
-                <i class="fas fa-file-excel"></i> Download Detail (Excel)
-            </a>
-            <a href="{{ route('dosen.absensi.export-rekap-siswa', request()->all()) }}" class="btn btn-info btn-sm" target="_blank">
-                <i class="fas fa-chart-bar"></i> Download Rekap per Siswa (Excel)
-            </a>
-        </div>
-    </div>
-</div>
 
     // ==================== FITUR PENCARIAN ====================
     $('#searchBtn, #searchInput').on('keyup click', function() {
         var searchText = $('#searchInput').val().toLowerCase();
         $('#absensiTable tbody tr').each(function() {
             var rowText = $(this).text().toLowerCase();
-            if (rowText.indexOf(searchText) === -1) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
+            $(this).toggle(rowText.indexOf(searchText) !== -1);
         });
     });
 });

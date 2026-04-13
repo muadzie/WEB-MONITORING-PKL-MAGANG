@@ -131,6 +131,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     // Absensi
     Route::get('/absensi/siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'index'])->name('absensi.siswa');
     Route::get('/absensi/rekap', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'rekap'])->name('absensi.rekap');
+    Route::get('/absensi/export-siswa/{siswaId}', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportSiswaIndividu'])->name('absensi.export-siswa');
     Route::get('/absensi/export-excel', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportExcel'])->name('absensi.export-excel');
     Route::get('/absensi/export-rekap-siswa', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'exportRekapSiswa'])->name('absensi.export-rekap-siswa');
     Route::post('/absensi/absen-siswa/{siswaId}', [App\Http\Controllers\Dosen\AbsensiDosenController::class, 'absenSiswa'])->name('absensi.absen-siswa');
