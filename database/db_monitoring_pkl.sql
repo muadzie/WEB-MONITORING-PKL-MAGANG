@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2026 at 07:39 PM
+-- Generation Time: Apr 13, 2026 at 12:24 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,10 +74,12 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-2f3c86e81c3526a4d074d1dcbf447839', 'i:1;', 1775578489),
-('laravel-cache-2f3c86e81c3526a4d074d1dcbf447839:timer', 'i:1775578489;', 1775578489),
-('laravel-cache-607a9e80082fa25994190aa8d1ebaa72', 'i:1;', 1775583383),
-('laravel-cache-607a9e80082fa25994190aa8d1ebaa72:timer', 'i:1775583383;', 1775583383);
+('laravel-cache-2f3c86e81c3526a4d074d1dcbf447839', 'i:1;', 1776075741),
+('laravel-cache-2f3c86e81c3526a4d074d1dcbf447839:timer', 'i:1776075741;', 1776075741),
+('laravel-cache-3a13743629773064212ab096f7a2cc49', 'i:1;', 1776075685),
+('laravel-cache-3a13743629773064212ab096f7a2cc49:timer', 'i:1776075685;', 1776075685),
+('laravel-cache-a34e63348b27358c0a4235e57d32f112', 'i:1;', 1776075723),
+('laravel-cache-a34e63348b27358c0a4235e57d32f112:timer', 'i:1776075723;', 1776075723);
 
 -- --------------------------------------------------------
 
@@ -119,8 +121,8 @@ CREATE TABLE `dosens` (
 --
 
 INSERT INTO `dosens` (`id`, `nidn`, `nama_dosen`, `gelar_depan`, `gelar_belakang`, `jurusan`, `fakultas`, `telepon`, `email`, `foto`, `user_id`, `is_active`, `created_at`, `updated_at`) VALUES
-(2, '123456789', 'adila', 'S.KOM', 'M.H', 'TBSM', 'IPA', '0800000', 'guru1@test.com', 'dosens/foto/NSY5I6OmYWik1vUX0qfgFE3npj7Gv2oIRGzAfJGI.jpg', 11, 1, '2026-04-06 01:55:28', '2026-04-07 06:05:29'),
-(3, '999999', 'kurniawan', NULL, 'S.kom', 'TKJ', 'komputer', '111111', 'guru2@test.com', NULL, 14, 1, '2026-04-06 21:10:32', '2026-04-06 21:10:32');
+(2, '123456789', 'adila', 'S.KOM', 'M.H', 'TBSM', 'IPA', '0800000', 'guru1@test.com', 'dosens/foto/NSY5I6OmYWik1vUX0qfgFE3npj7Gv2oIRGzAfJGI.jpg', 11, 1, '2026-04-06 01:55:28', '2026-04-13 01:36:59'),
+(3, '999999', 'kurniawan', NULL, 'S.kom', 'TKJ', 'komputer', '111111', 'guru2@test.com', NULL, 14, 1, '2026-04-06 21:10:32', '2026-04-13 01:37:31');
 
 -- --------------------------------------------------------
 
@@ -185,7 +187,7 @@ CREATE TABLE `kelompok_pkls` (
 --
 
 INSERT INTO `kelompok_pkls` (`id`, `nama_kelompok`, `dosen_id`, `perusahaan_id`, `tanggal_mulai`, `tanggal_selesai`, `status`, `catatan`, `created_at`, `updated_at`) VALUES
-(2, 'haji', 3, 3, '2026-04-07', '2026-04-08', 'aktif', NULL, '2026-04-06 21:12:09', '2026-04-06 21:12:16');
+(2, 'haji', 3, 3, '2026-04-07', '2026-04-08', 'selesai', NULL, '2026-04-06 21:12:09', '2026-04-10 23:18:05');
 
 -- --------------------------------------------------------
 
@@ -232,6 +234,13 @@ CREATE TABLE `laporans` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `laporans`
+--
+
+INSERT INTO `laporans` (`id`, `kelompok_siswa_id`, `judul_laporan`, `abstrak`, `file_laporan`, `file_presentasi`, `status`, `catatan_revisi`, `reviewer_dosen_id`, `reviewed_at`, `created_at`, `updated_at`) VALUES
+(1, 3, 'laporan magang di pt abc', 'asdkadnoakknsndaksndkaosndoka', 'laporan/3/6D4qTCAGle991Hdu26poG1pav4O3Dn0zvauOTLFN.pdf', 'presentasi/3/qa52Xt2CQcfkQuMthZv7YLgeYSA7z0vO7d40b99k.pdf', 'disetujui', NULL, 14, '2026-04-09 07:03:18', '2026-04-09 06:58:55', '2026-04-09 07:03:18');
 
 -- --------------------------------------------------------
 
@@ -338,20 +347,25 @@ INSERT INTO `notifikasis` (`id`, `user_id`, `judul`, `pesan`, `tipe`, `url`, `is
 (3, NULL, 'Status Kelompok PKL', 'Kelompok adawda telah aktif', 'success', NULL, 0, '2026-04-05 05:51:41', '2026-04-05 05:51:41'),
 (4, NULL, 'Absensi oleh Dosen', 'Anda telah diabsensi oleh dosen pembimbing pada hari ini', 'success', 'http://127.0.0.1:8000/siswa/absensi', 0, '2026-04-06 00:40:58', '2026-04-06 00:40:58'),
 (5, NULL, 'Absensi oleh Dosen', 'Anda telah diabsensi oleh dosen pembimbing pada hari ini', 'success', 'http://127.0.0.1:8000/siswa/absensi', 0, '2026-04-06 00:41:03', '2026-04-06 00:41:03'),
-(6, 14, 'Kelompok PKL Baru', 'Anda ditugaskan sebagai pembimbing kelompok haji', 'info', 'http://127.0.0.1:8000/dosen/bimbingan/2', 0, '2026-04-06 21:12:09', '2026-04-06 21:12:09'),
+(6, 14, 'Kelompok PKL Baru', 'Anda ditugaskan sebagai pembimbing kelompok haji', 'info', 'http://127.0.0.1:8000/dosen/bimbingan/2', 1, '2026-04-06 21:12:09', '2026-04-09 07:22:47'),
 (7, 13, 'Kelompok PKL Baru', 'Kelompok haji akan PKL di perusahaan Anda', 'info', 'http://127.0.0.1:8000/pt/monitoring/2', 0, '2026-04-06 21:12:09', '2026-04-06 21:12:09'),
-(8, 9, 'Status Kelompok PKL', 'Kelompok haji telah aktif', 'success', NULL, 0, '2026-04-06 21:12:16', '2026-04-06 21:12:16'),
-(9, 14, 'Logbook Baru', 'AGUS mengirim logbook baru untuk tanggal 07/04/2026', 'info', 'http://127.0.0.1:8000/dosen/logbook/1/review', 0, '2026-04-07 07:46:54', '2026-04-07 07:46:54'),
+(8, 9, 'Status Kelompok PKL', 'Kelompok haji telah aktif', 'success', NULL, 1, '2026-04-06 21:12:16', '2026-04-13 01:45:49'),
+(9, 14, 'Logbook Baru', 'AGUS mengirim logbook baru untuk tanggal 07/04/2026', 'info', 'http://127.0.0.1:8000/dosen/logbook/1/review', 1, '2026-04-07 07:46:54', '2026-04-09 07:22:47'),
 (10, 13, 'Logbook Baru', 'AGUS mengirim logbook baru untuk tanggal 07/04/2026', 'info', 'http://127.0.0.1:8000/pt/logbook/1/review', 0, '2026-04-07 07:46:54', '2026-04-07 07:46:54'),
-(11, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 07:48:03', '2026-04-07 07:48:03'),
-(12, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 08:29:26', '2026-04-07 08:29:26'),
-(13, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 08:29:43', '2026-04-07 08:29:43'),
-(14, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 08:30:01', '2026-04-07 08:30:01'),
-(15, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 08:30:28', '2026-04-07 08:30:28'),
-(16, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 08:53:42', '2026-04-07 08:53:42'),
-(17, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 09:17:27', '2026-04-07 09:17:27'),
-(18, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 09:17:38', '2026-04-07 09:17:38'),
-(19, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 0, '2026-04-07 09:18:23', '2026-04-07 09:18:23');
+(11, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 07:48:03', '2026-04-13 01:45:49'),
+(12, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 08:29:26', '2026-04-13 01:45:49'),
+(13, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 08:29:43', '2026-04-13 01:45:49'),
+(14, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 08:30:01', '2026-04-13 01:45:49'),
+(15, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 08:30:28', '2026-04-13 01:45:49'),
+(16, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 08:53:42', '2026-04-13 01:45:49'),
+(17, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 09:17:27', '2026-04-13 01:45:49'),
+(18, 9, 'Logbook Disetujui oleh Dosen', 'Logbook tanggal 07/04/2026 telah disetujui oleh dosen pembimbing.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 09:17:38', '2026-04-13 01:45:49'),
+(19, 9, 'Logbook Disetujui', 'Logbook tanggal 07/04/2026 telah disetujui oleh pembimbing PT.', 'success', 'http://127.0.0.1:8000/siswa/logbook/1', 1, '2026-04-07 09:18:23', '2026-04-13 01:45:49'),
+(20, 14, 'Pengajuan Sakit', 'AGUS mengajukan sakit dari 09/04/2026 s/d 09/04/2026', 'info', 'http://127.0.0.1:8000/dosen/ijin-sakit', 1, '2026-04-09 06:57:45', '2026-04-09 07:22:47'),
+(21, 14, 'Laporan Baru', 'AGUS mengajukan laporan untuk direview.', 'info', 'http://127.0.0.1:8000/dosen/laporan/1/review', 1, '2026-04-09 06:59:06', '2026-04-09 07:22:47'),
+(22, 9, 'Pengajuan Sakit Disetujui', 'Pengajuan Anda telah disetujui oleh dosen pembimbing.', 'success', NULL, 1, '2026-04-09 07:00:04', '2026-04-13 01:45:49'),
+(23, 9, 'Penilaian Dosen', 'Nilai PKL dari dosen pembimbing telah diinput.', 'success', 'http://127.0.0.1:8000/siswa/penilaian', 1, '2026-04-10 23:23:25', '2026-04-13 01:45:49'),
+(24, 9, 'Penilaian dari PT', 'Nilai PKL dari pembimbing PT telah diinput.', 'success', 'http://127.0.0.1:8000/siswa/penilaian', 1, '2026-04-10 23:28:35', '2026-04-13 01:45:49');
 
 -- --------------------------------------------------------
 
@@ -388,6 +402,14 @@ CREATE TABLE `penilaians` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `penilaians`
+--
+
+INSERT INTO `penilaians` (`id`, `kelompok_siswa_id`, `penilai`, `nilai_laporan`, `nilai_presentasi`, `nilai_sikap`, `nilai_kinerja`, `nilai_kedisiplinan`, `nilai_kerjasama`, `nilai_inisiatif`, `nilai_akhir`, `catatan`, `penilai_id`, `created_at`, `updated_at`) VALUES
+(1, 3, 'dosen', 68, 80, 80, NULL, NULL, NULL, NULL, 76, 'yang baik ya', 14, '2026-04-10 23:23:25', '2026-04-10 23:23:25'),
+(2, 3, 'pt', NULL, NULL, NULL, 90, 80, 90, 89, 87.25, 'cukup baik', 13, '2026-04-10 23:28:35', '2026-04-10 23:28:35');
 
 -- --------------------------------------------------------
 
@@ -461,7 +483,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('yqnGr2PqJfwPAsElQpPc8u2hKP062dMetOnFnaA5', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZ2w5RnBUUGU2V2lOUnFYSGVaeEtlWDdvRHozb3dNa2p6d3pZSXVLOSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZWdpc3RlciI7czo1OiJyb3V0ZSI7czo4OiJyZWdpc3RlciI7fX0=', 1775583504);
+('DnBOpNeD8vPXohlocFl3jsDW6KcsXtgYdacKeuYe', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZEJNRmF0ZnNYaUhWazlXbmRTWHU3VHFZUVUxYTA5UGR4Q2h3b3BOaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9fQ==', 1776075819);
 
 -- --------------------------------------------------------
 
@@ -495,13 +517,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `nomor_induk`, `phone`, `address`, `foto`, `role`, `is_active`, `profile_photo_path`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin Sistem', 'admin@monitoring.test', NULL, '$2y$12$q1CVL5rMW9G5OUa1c9PhpuoVT9q.gZe8K3qcG/58JFldROoKM4G/i', 'ADM001', '081234567890', 'Jl. Contoh No. 1', NULL, 'admin', 1, NULL, NULL, NULL, NULL, 'HBBSEkCwgeVj1LO51C9csEodzcfGSM1gX7ZI1pT2SDS0xm9aH7na4uYLmjsd', '2026-03-31 22:43:29', '2026-03-31 22:43:29'),
+(1, 'Admin Sistem', 'admin@monitoring.test', NULL, '$2y$12$q1CVL5rMW9G5OUa1c9PhpuoVT9q.gZe8K3qcG/58JFldROoKM4G/i', 'ADM001', '081234567890', 'Jl. Contoh No. 1', NULL, 'admin', 1, NULL, NULL, NULL, NULL, '7ebRiQsmfMYV6h3TATjuRBa71V0pP7Qo8GNZOkcPM8HjiYLpMxRXi3HyTHf2', '2026-03-31 22:43:29', '2026-03-31 22:43:29'),
 (9, 'AGUS', 'siswa1@test.com', NULL, '$2y$12$lMTq.EY0JtdT8lhobyAkEuC5rgncVowSJWyeKkZfeTt8gRfRISnka', '01010101', '01010101', 'SUBANG', 'users/foto/IzFCYsmFYEbObhl6mz7OnlmAF2ZFCxSL6LkpbfSc.jpg', 'siswa', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 01:41:21', '2026-04-07 07:39:10'),
 (10, 'Pt.bengkel', 'pt5@test.com', NULL, '$2y$12$b4jsvAGox51Ich7BRH/m4OasrvsjmekJhFEZpIiXNtg6HBBP52ZNK', 'PT1775465626', '0808080', 'Subang, West Java, Java, 41215, Indonesia', 'perusahaan/logo/1775572036_iron-man-4k-wallpaper-uhdpaper.com-5335h.jpg', 'pt', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 01:53:46', '2026-04-07 07:27:16'),
-(11, 'adila', 'guru1@test.com', NULL, '$2y$12$oIL0giB01a7e6BOaoHcBc.j.gC67YmtenO2whzwwfQjlLFxeMOlKS', '123456789', '0800000', NULL, 'dosens/foto/NSY5I6OmYWik1vUX0qfgFE3npj7Gv2oIRGzAfJGI.jpg', 'dosen', 1, NULL, NULL, NULL, NULL, 'G5JTAY38DMO0LptlmupC5eFuUyMjSGjgV8Ekqmo9DeBgZ9F8avVBwwKLHbCk', '2026-04-06 01:55:28', '2026-04-07 07:00:37'),
-(13, 'PT.MSKOM', 'iwen@test.com', NULL, '$2y$12$AtnZq8m0EsWEk8NlKin.yeJnML8GHbCBZ2sACQUQe651Q0ND63jCi', 'PT1775534910', '000000', 'Universitas Subang, Jalan Raden Ajeng. Kartini, Kelurahan Soklat, Wanareja, Subang, West Java, Java, 41215, Indonesia', 'perusahaan/logo/1775572152_iron-man-4k-wallpaper-uhdpaper.com-5335h.jpg', 'pt', 1, NULL, NULL, NULL, NULL, 'LyCxH90rnjisuTrqBRilpPc1xcASsdwCfXtnAPrKTficfIBlYpCCAvEvoEXP', '2026-04-06 21:08:30', '2026-04-07 07:29:12'),
-(14, 'kurniawan', 'guru2@test.com', NULL, '$2y$12$rqd5juO6vFltsSivccs70uR//HkZGAee.4eDe2WUDxY.2A3zbFpvC', '999999', '111111', NULL, NULL, 'dosen', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 21:10:32', '2026-04-06 21:10:32'),
-(15, 'faris', 'faris@gmail.com', NULL, '$2y$12$Pe3YbXdAyUQHUKGkxvVOhejFFJXBPzymliLDK/gJb0.A0zoTy9piK', NULL, NULL, NULL, NULL, 'siswa', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 21:20:49', '2026-04-06 21:20:49');
+(11, 'adila', 'guru1@test.com', NULL, '$2y$12$8UAeFcb/EvDQH1SGMz6ByemSmVM.keiBQC3ykWCXGEt8WpofvLKky', '123456789', '0800000', NULL, 'dosens/foto/NSY5I6OmYWik1vUX0qfgFE3npj7Gv2oIRGzAfJGI.jpg', 'dosen', 1, NULL, NULL, NULL, NULL, 'psfP2TJMhIlKyntBHS7pL7142djHKvwulqscqHUGs8022ISsUDcFLhLKxwVp', '2026-04-06 01:55:28', '2026-04-13 01:36:59'),
+(13, 'PT.MSKOM', 'iwen@test.com', NULL, '$2y$12$AtnZq8m0EsWEk8NlKin.yeJnML8GHbCBZ2sACQUQe651Q0ND63jCi', 'PT1775534910', '000000', 'Universitas Subang, Jalan Raden Ajeng. Kartini, Kelurahan Soklat, Wanareja, Subang, West Java, Java, 41215, Indonesia', 'perusahaan/logo/1775572152_iron-man-4k-wallpaper-uhdpaper.com-5335h.jpg', 'pt', 1, NULL, NULL, NULL, NULL, 'aVKyEbyGDedqyJXNxGLcdCEcOhiHB3k17LfVXzGUmkeRcoTMEMYXAJiUwCzo', '2026-04-06 21:08:30', '2026-04-07 07:29:12'),
+(14, 'kurniawan', 'guru2@test.com', NULL, '$2y$12$rqd5juO6vFltsSivccs70uR//HkZGAee.4eDe2WUDxY.2A3zbFpvC', '999999', '111111', NULL, NULL, 'dosen', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 21:10:32', '2026-04-13 01:37:30'),
+(15, 'faris', 'faris@gmail.com', NULL, '$2y$12$Pe3YbXdAyUQHUKGkxvVOhejFFJXBPzymliLDK/gJb0.A0zoTy9piK', NULL, NULL, NULL, NULL, 'siswa', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-06 21:20:49', '2026-04-06 21:20:49'),
+(16, 'zidan', 'siswa3@test.com', NULL, '$2y$12$.zv2K48NU2SgTNJ47.NCLemocukA0EHAZs9bmUN6dTemSUAlr292C', '9292922929292929', '0000000000', 'subang', NULL, 'siswa', 1, NULL, NULL, NULL, NULL, NULL, '2026-04-13 00:54:59', '2026-04-13 00:54:59');
 
 --
 -- Indexes for dumped tables
@@ -672,7 +695,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `ijin_sakit`
 --
 ALTER TABLE `ijin_sakit`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `kelompok_pkls`
@@ -690,7 +713,7 @@ ALTER TABLE `kelompok_siswas`
 -- AUTO_INCREMENT for table `laporans`
 --
 ALTER TABLE `laporans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `logbooks`
@@ -708,13 +731,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `notifikasis`
 --
 ALTER TABLE `notifikasis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `penilaians`
 --
 ALTER TABLE `penilaians`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -732,7 +755,7 @@ ALTER TABLE `perusahaans`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
