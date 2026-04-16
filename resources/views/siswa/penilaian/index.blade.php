@@ -13,7 +13,7 @@
     <div class="col-md-6">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Penilaian Dosen Pembimbing</h3>
+                <h3 class="card-title">Penilaian Guru Pembimbing</h3>
             </div>
             <div class="card-body">
                 @if($nilaiDosen)
@@ -40,7 +40,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Nilai Akhir Dosen</th>
+                            <th>Nilai Akhir Guru</th>
                             <td>
                                 <h2 class="text-primary">{{ $nilaiDosen->nilai_akhir ?? '-' }}</h2>
                             </td>
@@ -159,7 +159,7 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-primary"><i class="fas fa-chalkboard-teacher"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Nilai Dosen</span>
+                                <span class="info-box-text">Nilai Guru</span>
                                 <span class="info-box-number">{{ number_format($nilaiDosen->nilai_akhir, 2) }}</span>
                             </div>
                         </div>
@@ -231,7 +231,7 @@
                         @foreach($penilaians as $index => $p)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ ucfirst($p->penilai) }}</td>
+                            <td>{{ $p->penilai_label }}</td>
                             <td>{{ $p->nilai_laporan ?? '-' }}</td>
                             <td>{{ $p->nilai_presentasi ?? '-' }}</td>
                             <td>{{ $p->nilai_sikap ?? '-' }}</td>

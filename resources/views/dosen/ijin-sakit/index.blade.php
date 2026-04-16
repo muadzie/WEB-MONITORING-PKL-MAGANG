@@ -17,7 +17,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Siswa</th>
-                                <th>NIM</th>
+                                <th>NISN</th>
                                 <th>Jenis</th>
                                 <th>Periode</th>
                                 <th>Alasan</th>

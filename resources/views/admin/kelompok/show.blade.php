@@ -25,7 +25,7 @@
                         <td>{{ $kelompok->nama_kelompok }}</td>
                     </tr>
                     <tr>
-                        <th>Dosen Pembimbing</th>
+                        <th>Guru Pembimbing</th>
                         <td>
                             {{ $kelompok->dosen->gelar_depan ? $kelompok->dosen->gelar_depan.' ' : '' }}
                             {{ $kelompok->dosen->nama_dosen ?? '-' }}
@@ -95,7 +95,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>NIM</th>
+                            <th>NISN</th>
                             <th>Nama Siswa</th>
                             <th>Kelas</th>
                             <th>Prodi</th>

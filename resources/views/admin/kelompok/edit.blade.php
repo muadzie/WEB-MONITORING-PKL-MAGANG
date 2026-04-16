@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="dosen_id">Dosen Pembimbing <span class="text-danger">*</span></label>
+                                <label for="dosen_id">Guru Pembimbing <span class="text-danger">*</span></label>
                                 <select class="form-control @error('dosen_id') is-invalid @enderror" id="dosen_id" name="dosen_id" required>
                                     <option value="">Pilih Dosen</option>
                                     @foreach($dosens as $dosen)

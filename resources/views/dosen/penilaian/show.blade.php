@@ -32,7 +32,7 @@
                                         <td>{{ $penilaian->kelompokSiswa->siswa->name }}</td>
                                     </tr>
                                     <tr>
-                                        <th>NIM</th>
+                                        <th>NISN</th>
                                         <td>{{ $penilaian->kelompokSiswa->nim }}</td>
                                     </tr>
                                     <tr>

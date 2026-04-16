@@ -30,7 +30,7 @@
                                         <strong>Nama:</strong> {{ $penilaian->kelompokSiswa->siswa->name }}
                                     </div>
                                     <div class="col-md-3">
-                                        <strong>NIM:</strong> {{ $penilaian->kelompokSiswa->nim }}
+                                        <strong>NISN:</strong> {{ $penilaian->kelompokSiswa->nim }}
                                     </div>
                                     <div class="col-md-3">
                                         <strong>Kelas:</strong> {{ $penilaian->kelompokSiswa->kelas }}

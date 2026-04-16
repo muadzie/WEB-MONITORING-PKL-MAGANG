@@ -32,7 +32,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>NIM</th>
+                                            <th>NISN</th>
                                             <th>Nama Siswa</th>
                                             <th>Kelas</th>
                                             <th>Prodi</th>

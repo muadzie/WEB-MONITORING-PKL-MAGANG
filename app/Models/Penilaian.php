@@ -43,4 +43,13 @@ class Penilaian extends Model
         
         return $this->nilai_akhir;
     }
+
+    public function getPenilaiLabelAttribute()
+{
+    return match($this->penilai) {
+        'dosen' => 'Guru',
+        'pt' => 'Perusahaan',
+        default => ucfirst($this->penilai)
+    };
+}
 }

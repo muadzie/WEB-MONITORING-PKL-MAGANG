@@ -26,9 +26,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="dosen_id">Dosen Pembimbing <span class="text-danger">*</span></label>
+                                <label for="dosen_id">Guru Pembimbing <span class="text-danger">*</span></label>
                                 <select class="form-control @error('dosen_id') is-invalid @enderror" id="dosen_id" name="dosen_id" required>
-                                    <option value="">Pilih Dosen</option>
+                                    <option value="">Pilih Guru</option>
                                     @foreach($dosens as $dosen)
                                         <option value="{{ $dosen->id }}" {{ old('dosen_id') == $dosen->id ? 'selected' : '' }}>
                                             {{ $dosen->nama_dosen }} ({{ $dosen->nidn }})
@@ -106,7 +106,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" class="form-control" name="nims[]" placeholder="NIM" readonly>
+                                <input type="text" class="form-control" name="nims[]" placeholder="NISN" readonly>
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" name="kelass[]" placeholder="Kelas" required>

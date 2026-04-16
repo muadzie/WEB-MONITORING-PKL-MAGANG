@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-3">
                             <select name="dosen_id" class="form-control">
-                                <option value="">Semua Dosen</option>
+                                <option value="">Semua Guru</option>
                                 @foreach($dosens as $dosen)
                                     <option value="{{ $dosen->id }}" {{ request('dosen_id') == $dosen->id ? 'selected' : '' }}>
                                         {{ $dosen->nama_dosen }}
@@ -63,7 +63,7 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Nama Kelompok</th>
-                                <th>Dosen Pembimbing</th>
+                                <th>Guru Pembimbing</th>
                                 <th>Perusahaan</th>
                                 <th>Jumlah Anggota</th>
                                 <th>Periode</th>

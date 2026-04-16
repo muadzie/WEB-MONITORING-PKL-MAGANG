@@ -19,7 +19,7 @@
                         <tr>
                             <th>No</th>
                             <th>Siswa</th>
-                            <th>NIM</th>
+                            <th>NISN</th>
                             <th>Nilai Laporan</th>
                             <th>Nilai Presentasi</th>
                             <th>Nilai Sikap</th>

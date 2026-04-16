@@ -69,7 +69,7 @@
                                 <th width="5%">No</th>
                                 <th width="10%">Tanggal</th>
                                 <th width="15%">Siswa</th>
-                                <th width="10%">NIM</th>
+                                <th width="10%">NISN</th>
                                 <th width="15%">Kelompok</th>
                                 <th width="20%">Kegiatan</th>
                                 <th width="10%">Jam</th>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard Dosen')
-@section('page-title', 'Dashboard Dosen Pembimbing')
+@section('page-title', 'Dashboard Guru Pembimbing')
 
 @section('content')
 <div class="row">

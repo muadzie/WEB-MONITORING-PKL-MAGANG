@@ -23,9 +23,9 @@
                                 <th width="5%">No</th>
                                 <th>Judul Laporan</th>
                                 <th>Siswa</th>
-                                <th>NIM</th>
+                                <th>NISN</th>
                                 <th>Kelompok</th>
-                                <th>Dosen Pembimbing</th>
+                                <th>Guru Pembimbing</th>
                                 <th>Tanggal Upload</th>
                                 <th width="12%">Aksi</th>
                             </tr>

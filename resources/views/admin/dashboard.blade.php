@@ -24,7 +24,7 @@
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>{{ $totalDosen ?? 0 }}</h3>
-                <p>Total Dosen</p>
+                <p>Total Guru</p>
             </div>
             <div class="icon">
                 <i class="fas fa-chalkboard-teacher"></i>
@@ -101,7 +101,7 @@
                     <thead>
                         <tr>
                             <th>Nama Kelompok</th>
-                            <th>Dosen</th>
+                            <th>Guru</th>
                             <th>Perusahaan</th>
                             <th>Tanggal Mulai</th>
                             <th>Status</th>

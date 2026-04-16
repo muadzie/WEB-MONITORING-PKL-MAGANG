@@ -28,7 +28,7 @@
                                         <th width="200">Penilai</th>
                                         <td>
                                             @if($penilaian->penilai == 'dosen')
-                                                <span class="badge badge-primary">Dosen Pembimbing</span>
+                                                <span class="badge badge-primary">Guru Pembimbing</span>
                                             @else
                                                 <span class="badge badge-success">Pembimbing PT</span>
                                             @endif
