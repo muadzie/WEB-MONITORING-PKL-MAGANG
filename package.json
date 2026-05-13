@@ -1,21 +1,25 @@
 {
-    "$schema": "https://www.schemastore.org/package.json",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite"
-    },
-    "devDependencies": {
-        "@tailwindcss/forms": "^0.5.7",
-        "@tailwindcss/typography": "^0.5.10",
-        "@tailwindcss/vite": "^4.0.0",
-        "autoprefixer": "^10.4.16",
-        "axios": "^1.11.0",
-        "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^2.0.0",
-        "postcss": "^8.4.32",
-        "tailwindcss": "^3.4.0",
-        "vite": "^7.0.7"
-    }
+  "$schema": "https://www.schemastore.org/package.json",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.36.4",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/vite": "^4.0.0",
+    "autoprefixer": "^10.4.16",
+    "axios": "^1.11.0",
+    "concurrently": "^9.0.1",
+    "laravel-vite-plugin": "^2.0.0",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "vite": "^7.0.7",
+    "wrangler": "^4.90.1"
+  }
 }
