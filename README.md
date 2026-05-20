@@ -576,3 +576,5 @@ Project ini dikembangkan untuk tujuan edukasi dan monitoring PKL / Magang.
 <!-- Last updated: May 2026 -->
 
 > *Project ini dikembangkan untuk tujuan edukasi monitoring PKL / Magang*
+
+Crafted with ?? by Ilham Mu'adz Fakhrizi & Team
