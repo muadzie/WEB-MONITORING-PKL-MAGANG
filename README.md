@@ -574,3 +574,5 @@ Project ini dikembangkan untuk tujuan edukasi dan monitoring PKL / Magang.
 </div>
 
 <!-- Last updated: May 2026 -->
+
+> *Project ini dikembangkan untuk tujuan edukasi monitoring PKL / Magang*
