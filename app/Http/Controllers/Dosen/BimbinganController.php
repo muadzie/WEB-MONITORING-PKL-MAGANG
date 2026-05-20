@@ -166,7 +166,7 @@ public function logbookPending(Request $request)
     {
         $this->initDosen();
         
-        if ($logbook->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
+            if ($logbook?->kelompokSiswa?->kelompok?->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
@@ -182,7 +182,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
     $dosenId = $this->dosen->id;
     
     // Cek kepemilikan
-    if ($logbook->kelompokSiswa->kelompok->dosen_id != $dosenId) {
+    if ($logbook?->kelompokSiswa?->kelompok?->dosen_id != $dosenId) {
         abort(403, 'Anda tidak memiliki akses ke logbook ini');
     }
     
@@ -193,14 +193,18 @@ public function approveLogbook(Request $request, Logbook $logbook)
     
     $status = $request->action === 'approve' ? 'disetujui' : 'ditolak';
     
-    $logbook->update([
-        'approval_dosen' => $status,
-        'catatan_dosen' => $request->catatan,
-        'approved_by_dosen' => Auth::id(),
-        'approved_at_dosen' => now(),
-        // Update status utama jika sudah diapprove oleh kedua belah pihak
-        'status' => ($status === 'disetujui' && $logbook->approval_pt === 'disetujui') ? 'disetujui' : 'pending',
-    ]);
+        $logbook->update([
+            'approval_dosen' => $status,
+            'catatan_dosen' => $request->catatan,
+            'approved_by_dosen' => Auth::id(),
+            'approved_at_dosen' => now(),
+        ]);
+
+        $logbook->refresh();
+
+        if ($status === 'disetujui' && $logbook->approval_pt === 'disetujui') {
+            $logbook->update(['status' => 'disetujui']);
+        }
     
     // Notifikasi ke siswa
     Notifikasi::create([
@@ -249,7 +253,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
     {
         $this->initDosen();
         
-        if ($laporan->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
+        if ($laporan?->kelompokSiswa?->kelompok?->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
@@ -262,7 +266,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
     {
         $this->initDosen();
         
-        if ($laporan->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
+        if ($laporan?->kelompokSiswa?->kelompok?->dosen_id != $this->dosen->id) {
             abort(403);
         }
         
@@ -292,7 +296,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
     {
         $this->initDosen();
         
-        if ($laporan->kelompokSiswa->kelompok->dosen_id != $this->dosen->id) {
+        if ($laporan?->kelompokSiswa?->kelompok?->dosen_id != $this->dosen->id) {
             abort(403);
         }
         

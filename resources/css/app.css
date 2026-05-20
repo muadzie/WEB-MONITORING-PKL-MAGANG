@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tailwindcss/forms";
+@import "tailwindcss/typography";
 
 [x-cloak] {
     display: none;

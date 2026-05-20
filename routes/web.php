@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Manajemen Kelompok PKL
         Route::resource('kelompok', App\Http\Controllers\Admin\KelompokController::class);
         Route::post('/kelompok/{kelompok}/approve', [App\Http\Controllers\Admin\KelompokController::class, 'approve'])->name('kelompok.approve');
-        Route::post('/kelompok/{kelompok}/selesaikan', [App\Http\Controllers\Admin\KelompokController::class, 'selesaikan'])->name('admin.kelompok.selesaikan');
+        Route::post('/kelompok/{kelompok}/selesaikan', [App\Http\Controllers\Admin\KelompokController::class, 'selesaikan'])->name('kelompok.selesaikan');
         
         // ========== EXPORT ROUTES ==========
         Route::prefix('export')->name('export.')->group(function () {
@@ -110,7 +110,7 @@ Route::prefix('dosen')->name('dosen.')->middleware(['auth', 'role:dosen'])->grou
     // Bimbingan
     Route::get('/bimbingan', [App\Http\Controllers\Dosen\BimbinganController::class, 'index'])->name('bimbingan.index');
     Route::get('/bimbingan/{kelompok}', [App\Http\Controllers\Dosen\BimbinganController::class, 'show'])->name('bimbingan.show');
-    Route::post('/bimbingan/{kelompok}/selesaikan', [App\Http\Controllers\Dosen\BimbinganController::class, 'selesaikan'])->name('dosen.bimbingan.selesaikan');
+    Route::post('/bimbingan/{kelompok}/selesaikan', [App\Http\Controllers\Dosen\BimbinganController::class, 'selesaikan'])->name('bimbingan.selesaikan');
     
     // Logbook
     Route::get('/logbook/pending', [App\Http\Controllers\Dosen\BimbinganController::class, 'logbookPending'])->name('logbook.pending');

@@ -165,7 +165,7 @@ class LaporanController extends Controller
         ]);
         
         // Notifikasi ke dosen
-        $dosen = $laporan->kelompokSiswa->kelompok->dosen->user;
+        $dosen = $laporan?->kelompokSiswa?->kelompok?->dosen?->user;
         Notifikasi::create([
             'user_id' => $dosen->id,
             'judul' => 'Laporan Baru',
