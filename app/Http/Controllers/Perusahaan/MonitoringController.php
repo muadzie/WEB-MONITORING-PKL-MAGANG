@@ -214,7 +214,7 @@ class MonitoringController extends Controller
         $perusahaanId = $this->perusahaan->id;
         
         // Cek kepemilikan
-        if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        if ($logbook?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
             abort(403, 'Anda tidak memiliki akses ke logbook ini');
         }
         
@@ -232,7 +232,7 @@ class MonitoringController extends Controller
         
         $perusahaanId = $this->perusahaan->id;
         
-        if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        if ($logbook?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
             abort(403, 'Anda tidak memiliki akses ke file ini');
         }
         
@@ -256,7 +256,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
     $perusahaanId = $this->perusahaan->id;
     
     // Cek kepemilikan
-    if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+    if ($logbook?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
         abort(403, 'Anda tidak memiliki akses ke logbook ini');
     }
     
@@ -272,9 +272,13 @@ public function approveLogbook(Request $request, Logbook $logbook)
         'catatan_pt' => $request->catatan,
         'approved_by_pt' => Auth::id(),
         'approved_at_pt' => now(),
-        // Update status utama jika sudah diapprove oleh kedua belah pihak
-        'status' => ($status === 'disetujui' && $logbook->approval_dosen === 'disetujui') ? 'disetujui' : 'pending',
     ]);
+
+    $logbook->refresh();
+
+    if ($status === 'disetujui' && $logbook->approval_dosen === 'disetujui') {
+        $logbook->update(['status' => 'disetujui']);
+    }
     
     // Notifikasi ke siswa
     Notifikasi::create([
@@ -299,7 +303,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
         
         $perusahaanId = $this->perusahaan->id;
         
-        if ($logbook->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        if ($logbook?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
             abort(403);
         }
         
@@ -345,7 +349,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
         
         $perusahaanId = $this->perusahaan->id;
         
-        if ($laporan->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        if ($laporan?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
             abort(403);
         }
         
@@ -361,7 +365,7 @@ public function approveLogbook(Request $request, Logbook $logbook)
         
         $perusahaanId = $this->perusahaan->id;
         
-        if ($laporan->kelompokSiswa->kelompok->perusahaan_id != $perusahaanId) {
+        if ($laporan?->kelompokSiswa?->kelompok?->perusahaan_id != $perusahaanId) {
             abort(403);
         }
         

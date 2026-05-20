@@ -16,7 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Alias middleware
         $middleware->alias([
             'role' => CheckRole::class,
-            'isAdmin' => \App\Http\Middleware\IsAdmin::class, // contoh lain
         ]);
         
         // Middleware groups

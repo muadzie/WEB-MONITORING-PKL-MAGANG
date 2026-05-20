@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Logbook;
 use App\Models\Laporan;
-use App\Models\Approval;
 use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +16,7 @@ class ApprovalController extends Controller
         $user = Auth::user();
         
         // Cek apakah user adalah dosen pembimbing
-        $dosenId = $logbook->kelompokSiswa->kelompok->dosen->user_id;
+        $dosenId = $logbook?->kelompokSiswa?->kelompok?->dosen?->user_id;
         if ($user->id != $dosenId && !$user->isAdmin()) {
             abort(403);
         }
@@ -56,7 +55,7 @@ class ApprovalController extends Controller
         $user = Auth::user();
         
         // Cek apakah user adalah PT tempat PKL
-        $ptId = $logbook->kelompokSiswa->kelompok->perusahaan->user_id;
+        $ptId = $logbook?->kelompokSiswa?->kelompok?->perusahaan?->user_id;
         if ($user->id != $ptId && !$user->isAdmin()) {
             abort(403);
         }
@@ -95,7 +94,7 @@ class ApprovalController extends Controller
         $user = Auth::user();
         
         // Cek apakah user adalah dosen pembimbing
-        $dosenId = $laporan->kelompokSiswa->kelompok->dosen->user_id;
+        $dosenId = $laporan?->kelompokSiswa?->kelompok?->dosen?->user_id;
         if ($user->id != $dosenId && !$user->isAdmin()) {
             abort(403);
         }
